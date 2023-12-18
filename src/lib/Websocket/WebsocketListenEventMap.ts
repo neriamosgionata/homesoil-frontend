@@ -6,6 +6,7 @@ import {
     sensors as sensorStore
 } from "$lib/stores/store";
 import type SensorRead from "$lib/Models/SensorRead";
+import type SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     [WebsocketListenEventEnum.ALL_SENSORS_EVENT]: ({sensors}: { sensors: Sensor[] }) => {
@@ -34,12 +35,14 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             sensor_name,
             sensor_ip_address,
             sensor_type,
+            online,
             created_at,
         }: {
             sensor_id: number,
             sensor_name: string,
             sensor_ip_address: string,
-            sensor_type: string,
+            sensor_type: SensorTypeEnum,
+            online: boolean,
             created_at: string,
         }) => {
         console.log("Received sensor register event");
@@ -49,6 +52,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
                 name: sensor_name,
                 ip_address: sensor_ip_address,
                 sensor_type,
+                online,
                 created_at,
                 updated_at: null,
             };
