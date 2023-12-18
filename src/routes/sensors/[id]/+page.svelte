@@ -13,8 +13,7 @@
     const sensor_read_callback = (data: SensorRead) => {
         console.log('sensor read callback');
         sensor_reads.update((reads) => {
-            reads.push(data);
-            return reads;
+            return [data, ...reads];
         });
     }
 
@@ -61,7 +60,7 @@
             <thead>
             <tr>
                 <th>value</th>
-                <th>readed at</th>
+                <th>read at</th>
             </tr>
             </thead>
             <tbody>
