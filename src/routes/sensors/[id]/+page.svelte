@@ -6,6 +6,7 @@
     import type {Websocket} from "$lib/Websocket/Websocket";
     import WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
     import type SensorRead from "$lib/Models/SensorRead";
+    import Parser from "$lib/Parser/Parser";
 
     let id = $page.params.id;
     let ws: Writable<Websocket> = getContext('ws');
@@ -50,7 +51,7 @@
         <p>name: {$sensors[id].name}</p>
         <p>ip address: {$sensors[id].ip_address}</p>
         <p>created at: {$sensors[id].created_at}</p>
-        <p>latest reading: {$last_sensor_reads[id].sensor_value}</p>
+        <p>latest reading: {Parser.parseSensorReadValue($last_sensor_reads[id].sensor_value, $sensors[id].sensor_type)}</p>
 
         <hr class="my-4">
 
@@ -66,7 +67,7 @@
             <tbody>
             {#each $sensor_reads as read}
                 <tr>
-                    <td class="mr-2">{read.sensor_value}</td>
+                    <td class="mr-2">{Parser.parseSensorReadValue(read.sensor_value, $sensors[id].sensor_type)}</td>
                     <td>{read.created_at}</td>
                 </tr>
             {/each}

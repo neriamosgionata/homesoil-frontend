@@ -1,5 +1,6 @@
 <script lang="ts">
     import {last_sensor_reads, sensors} from "$lib/stores/store";
+    import Parser from "$lib/Parser/Parser";
 </script>
 
 <div>
@@ -15,7 +16,7 @@
                     <a href="/sensors/{sensor.id}">{sensor.name} ({sensor.ip_address})</a>
                 </td>
                 <td>
-                    {$last_sensor_reads[sensor.id] ? $last_sensor_reads[sensor.id].sensor_value : "No data"}
+                    {$last_sensor_reads[sensor.id] ? Parser.parseSensorReadValue($last_sensor_reads[sensor.id].sensor_value, sensor.sensor_type) : "No data"}
                 </td>
             </tr>
         {/each}
