@@ -2,8 +2,6 @@
     import {Websocket} from "$lib/Websocket/Websocket";
     import {onDestroy, onMount, setContext} from "svelte";
     import {writable} from "svelte/store";
-    import {goto} from '$app/navigation';
-
 
     const ws = writable(new Websocket());
 
@@ -12,8 +10,6 @@
     onMount(() => {
         $ws.close();
         $ws.init();
-
-        goto("/sensors");
     });
 
     onDestroy(() => {
@@ -21,4 +17,6 @@
     });
 </script>
 
-<slot/>
+<div>
+    <slot/>
+</div>

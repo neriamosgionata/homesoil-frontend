@@ -47,11 +47,15 @@ export class Websocket {
         this.emit_event(WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT, sensor_id);
     }
 
-    add_callback_to_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+    toggleActuator(actuator_id: number) {
+        this.emit_event(WebsocketEmitEventEnum.TOGGLE_ACTUATOR_EVENT, actuator_id);
+    }
+
+    listen_to_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
         this.socket?.on(event, callback);
     }
 
-    remove_callback_from_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+    remove_listener_from_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
         this.socket?.off(event, callback);
     }
 }

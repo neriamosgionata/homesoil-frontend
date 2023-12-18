@@ -1,12 +1,14 @@
 import WebsocketListenEventEnum from "../Enums/WebsocketListenEventEnum";
 import type Sensor from "$lib/Models/Sensor";
 import {
+    actuators as actuatorStore,
     last_sensor_reads as lastSensorsReadStore,
     sensor_reads as sensorReadStore,
-    sensors as sensorStore
+    sensors as sensorStore,
 } from "$lib/stores/store";
 import type SensorRead from "$lib/Models/SensorRead";
 import type SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
+import type Actuator from "$lib/Models/Actuator";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     [WebsocketListenEventEnum.ALL_SENSORS_EVENT]: ({sensors}: { sensors: Sensor[] }) => {
@@ -113,6 +115,89 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
 
     [WebsocketListenEventEnum.ALL_SENSOR_READINGS]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
         sensorReadStore.set(sensor_reads);
+    },
+
+    [WebsocketListenEventEnum.ALL_ACTUATORS_EVENT]: ({actuators}: { actuators: Actuator[] }) => {
+        console.log("Received all actuators");
+        actuatorStore.set(
+            actuators.reduce((acc, actuator) => {
+                acc[actuator.id] = actuator;
+                return acc;
+            }, {} as { [p: string]: Actuator })
+        );
+    },
+
+    [WebsocketListenEventEnum.ACTUATOR_REGISTER_EVENT]: (
+        {
+            actuator_id,
+            actuator_name,
+            actuator_ip_address,
+            actuator_state,
+            online,
+            created_at,
+        }: {
+            actuator_id: number,
+            actuator_name: string,
+            actuator_ip_address: string,
+            actuator_state: boolean,
+            online: boolean,
+            created_at: string,
+        }) => {
+        console.log("Received actuator register event");
+        actuatorStore.update(actuators => {
+            actuators[actuator_id] = {
+                id: actuator_id,
+                name: actuator_name,
+                ip_address: actuator_ip_address,
+                state: actuator_state,
+                online,
+                created_at,
+                updated_at: null,
+            };
+            return {...actuators};
+        });
+    },
+
+    [WebsocketListenEventEnum.ACTUATOR_UNREGISTER_EVENT]: ({actuator_id}: { actuator_id: number }) => {
+        console.log("Received actuator unregister event");
+        actuatorStore.update(actuators => {
+            delete actuators[actuator_id];
+            return actuators;
+        });
+    },
+
+    [WebsocketListenEventEnum.ACTUATOR_NAME_CHANGE_EVENT]: ({actuator_id, actuator_name, updated_at}: {
+        actuator_id: number,
+        actuator_name: string,
+        updated_at: string,
+    }) => {
+        console.log("Received actuator name change event");
+        actuatorStore.update(actuators => {
+            const actuator = actuators[actuator_id];
+            if (actuator) {
+                actuator.name = actuator_name;
+                actuator.updated_at = updated_at;
+                actuators[actuator_id] = actuator;
+            }
+            return {...actuators};
+        });
+    },
+
+    [WebsocketListenEventEnum.ACTUATOR_STATE_CHANGE_EVENT]: ({actuator_id, actuator_state, updated_at}: {
+        actuator_id: number,
+        actuator_state: boolean,
+        updated_at: string,
+    }) => {
+        console.log("Received actuator state change event");
+        actuatorStore.update(actuators => {
+            const actuator = actuators[actuator_id];
+            if (actuator) {
+                actuator.state = actuator_state;
+                actuator.updated_at = updated_at;
+                actuators[actuator_id] = actuator;
+            }
+            return {...actuators};
+        });
     },
 };
 

@@ -7,34 +7,41 @@
     import WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
     import type SensorRead from "$lib/Models/SensorRead";
     import Parser from "$lib/Parser/Parser";
+    import {goto} from "$app/navigation";
 
     let id = $page.params.id;
-    let ws: Writable<Websocket> = getContext('ws');
+
+    const ws: Writable<Websocket> = getContext('ws');
 
     const sensor_read_callback = (data: SensorRead) => {
         console.log('sensor read callback');
         sensor_reads.update((reads) => {
             return [data, ...reads];
         });
-    }
+    };
 
     onMount(() => {
         sensor_reads.set([]);
+
         $ws.get_all_sensor_readings(parseInt(id));
 
-        $ws.add_callback_to_event(
+        $ws.listen_to_event(
             WebsocketListenEventEnum.SENSOR_READ_EVENT,
             sensor_read_callback,
         );
     });
 
     onDestroy(() => {
-        $ws.remove_callback_from_event(
+        $ws.remove_listener_from_event(
             WebsocketListenEventEnum.SENSOR_READ_EVENT,
             sensor_read_callback,
         );
     });
 </script>
+
+<div class="my-4">
+    <button on:click={() => goto("/")}>HOME</button>
+</div>
 
 <div>
     <p>
@@ -51,7 +58,8 @@
         <p>name: {$sensors[id].name}</p>
         <p>ip address: {$sensors[id].ip_address}</p>
         <p>created at: {$sensors[id].created_at}</p>
-        <p>latest reading: {Parser.parseSensorReadValue($last_sensor_reads[id].sensor_value, $sensors[id].sensor_type)}</p>
+        <p>latest
+            reading: {Parser.parseSensorReadValue($last_sensor_reads[id].sensor_value, $sensors[id].sensor_type)}</p>
 
         <hr class="my-4">
 
