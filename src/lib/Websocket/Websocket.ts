@@ -40,7 +40,7 @@ export class Websocket {
     }
 
     private emit_event(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
-        this.socket.emit(event, data);
+        this.socket?.emit(event, data);
     }
 
     get_all_sensor_readings(sensor_id: number) {
@@ -48,10 +48,10 @@ export class Websocket {
     }
 
     add_callback_to_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
-        this.socket.on(event, callback);
+        this.socket?.on(event, callback);
     }
 
     remove_callback_from_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
-        this.socket.off(event, callback);
+        this.socket?.off(event, callback);
     }
 }

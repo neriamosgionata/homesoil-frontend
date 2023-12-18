@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {sensor_reads, sensors} from "$lib/stores/store";
+    import {last_sensor_reads, sensor_reads, sensors} from "$lib/stores/store";
     import {page} from '$app/stores';
     import {getContext, onDestroy, onMount} from "svelte";
     import type {Writable} from "svelte/store";
@@ -37,6 +37,10 @@
 </script>
 
 <div>
+    <p>
+        <a href="/sensors">back</a>
+    </p>
+
     <h1>Detail</h1>
 
     <p>id: {id}</p>
@@ -47,6 +51,7 @@
         <p>name: {$sensors[id].name}</p>
         <p>ip address: {$sensors[id].ip_address}</p>
         <p>created at: {$sensors[id].created_at}</p>
+        <p>latest reading: {$last_sensor_reads[id].sensor_value}</p>
 
         <hr class="my-4">
 
@@ -55,27 +60,19 @@
         <table>
             <thead>
             <tr>
-                <th>id</th>
-                <th>sensor_id</th>
                 <th>value</th>
-                <th>created_at</th>
+                <th>readed at</th>
             </tr>
             </thead>
             <tbody>
             {#each $sensor_reads as read}
                 <tr>
-                    <td>{read.id}</td>
-                    <td>{read.sensor_id}</td>
-                    <td>{read.sensor_value}</td>
+                    <td class="mr-2">{read.sensor_value}</td>
                     <td>{read.created_at}</td>
                 </tr>
             {/each}
             </tbody>
         </table>
     {/if}
-
-    <p>
-        <a href="/sensors">back</a>
-    </p>
 
 </div>
