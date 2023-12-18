@@ -2,6 +2,8 @@ import SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
 
 export default class Parser {
     static parseSensorReadValue(value: string, type: SensorTypeEnum): string {
+        value = parseFloat(value).toFixed(2);
+
         switch (type) {
             case SensorTypeEnum.SENSOR_TYPE_TEMPERATURE:
                 value += " °C";
