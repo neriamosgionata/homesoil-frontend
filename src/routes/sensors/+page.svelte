@@ -1,14 +1,23 @@
 <script lang="ts">
-    import {sensors} from "$lib/stores/store";
+    import {last_sensor_reads, sensors} from "$lib/stores/store";
 </script>
 
 <div>
     <h1>Sensors</h1>
-    <ul>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Last value</th>
+        </tr>
         {#each Object.values($sensors) as sensor}
-            <li>
-                <a href="/sensors/{sensor.id}">{sensor.name} ({sensor.ip_address})</a>
-            </li>
+            <tr>
+                <td>
+                    <a href="/sensors/{sensor.id}">{sensor.name} ({sensor.ip_address})</a>
+                </td>
+                <td>
+                    {$last_sensor_reads[sensor.id] ? $last_sensor_reads[sensor.id].sensor_value : "No data"}
+                </td>
+            </tr>
         {/each}
-    </ul>
+    </table>
 </div>

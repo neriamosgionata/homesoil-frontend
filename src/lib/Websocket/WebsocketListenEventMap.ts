@@ -1,6 +1,10 @@
 import WebsocketListenEventEnum from "../Enums/WebsocketListenEventEnum";
 import type Sensor from "$lib/Models/Sensor";
-import {sensor_reads as sensorReadStore, sensors as sensorStore} from "$lib/stores/store";
+import {
+    last_sensor_reads as lastSensorsReadStore,
+    sensor_reads as sensorReadStore,
+    sensors as sensorStore
+} from "$lib/stores/store";
 import type SensorRead from "$lib/Models/SensorRead";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
@@ -14,14 +18,13 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         );
     },
 
-    [WebsocketListenEventEnum.ALL_SENSOR_READINGS_EVENT]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
-        console.log("Received all sensor reads");
-        sensorReadStore.set(
-            sensor_reads.reduce((acc, sensor_read) => {
-                acc[sensor_read.sensor_id] = acc[sensor_read.sensor_id] || [];
-                acc[sensor_read.sensor_id].push(sensor_read);
+    [WebsocketListenEventEnum.ALL_LAST_SENSOR_READINGS_EVENT]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
+        console.log("Received all last sensor reads");
+        lastSensorsReadStore.set(
+            sensor_reads.reduce((acc, read) => {
+                acc[read.sensor_id] = read;
                 return acc;
-            }, {} as { [p: string]: SensorRead[] })
+            }, {} as { [p: string]: SensorRead })
         );
     },
 
@@ -63,25 +66,26 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
 
     [WebsocketListenEventEnum.SENSOR_READ_EVENT]: (
         {
+            id,
             sensor_id,
             sensor_value,
             created_at,
         }: {
+            id: number,
             sensor_id: number,
             sensor_value: string,
             created_at: string,
         }
     ) => {
         console.log("Received sensor read event");
-        sensorReadStore.update(reads => {
-            reads[sensor_id] = reads[sensor_id] || [];
-            reads[sensor_id].push({
-                id: reads[sensor_id].length,
+        lastSensorsReadStore.update(reads => {
+            reads[sensor_id] = {
+                id,
                 sensor_id,
                 sensor_value,
                 created_at,
                 updated_at: null,
-            });
+            };
             return {...reads};
         });
     },
@@ -103,16 +107,9 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         });
     },
 
-    [WebsocketListenEventEnum.SENSOR_READS_EVENT]: ({sensor_reads, sensor_id}: {
-        sensor_reads: SensorRead[],
-        sensor_id: string
-    }) => {
-        console.log("Received sensor reads event");
-        sensorReadStore.update(reads => {
-            reads[sensor_id] = sensor_reads;
-            return {...reads};
-        });
-    }
+    [WebsocketListenEventEnum.ALL_SENSOR_READINGS]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
+        sensorReadStore.set(sensor_reads);
+    },
 };
 
 export default WebsocketListenEventMap;

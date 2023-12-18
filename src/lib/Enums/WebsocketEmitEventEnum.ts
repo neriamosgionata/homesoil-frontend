@@ -1,6 +1,5 @@
 enum WebsocketEmitEventEnum {
-    GET_SENSORS_EVENT = "get-sensors",
-    GET_SENSOR_DATA_EVENT = "get-sensor-data"
+    GET_SENSOR_READINGS_EVENT = "get-sensor-readings",
 }
 
 export default WebsocketEmitEventEnum;

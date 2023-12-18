@@ -5,6 +5,7 @@ import WebsocketEmitEventMap from "$lib/Websocket/WebsocketEmitEventMap";
 import WebsocketEmitEventEnum from "$lib/Enums/WebsocketEmitEventEnum";
 // @ts-ignore
 import type {EventParams} from "socket.io/dist/typed-events";
+import type WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
 
 export class Websocket {
     private socket!: Socket<
@@ -38,7 +39,19 @@ export class Websocket {
             });
     }
 
-    private emit_event(event: WebsocketEmitEventEnum, data?: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
+    private emit_event(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
         this.socket.emit(event, data);
+    }
+
+    get_all_sensor_readings(sensor_id: number) {
+        this.emit_event(WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT, sensor_id);
+    }
+
+    add_callback_to_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+        this.socket.on(event, callback);
+    }
+
+    remove_callback_from_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+        this.socket.off(event, callback);
     }
 }

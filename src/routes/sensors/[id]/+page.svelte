@@ -1,8 +1,39 @@
 <script lang="ts">
     import {sensor_reads, sensors} from "$lib/stores/store";
     import {page} from '$app/stores';
+    import {getContext, onDestroy, onMount} from "svelte";
+    import type {Writable} from "svelte/store";
+    import type {Websocket} from "$lib/Websocket/Websocket";
+    import WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
+    import type SensorRead from "$lib/Models/SensorRead";
 
     let id = $page.params.id;
+    let ws: Writable<Websocket> = getContext('ws');
+
+    const sensor_read_callback = (data: SensorRead) => {
+        console.log('sensor read callback');
+        sensor_reads.update((reads) => {
+            reads.push(data);
+            return reads;
+        });
+    }
+
+    onMount(() => {
+        sensor_reads.set([]);
+        $ws.get_all_sensor_readings(parseInt(id));
+
+        $ws.add_callback_to_event(
+            WebsocketListenEventEnum.SENSOR_READ_EVENT,
+            sensor_read_callback,
+        );
+    });
+
+    onDestroy(() => {
+        $ws.remove_callback_from_event(
+            WebsocketListenEventEnum.SENSOR_READ_EVENT,
+            sensor_read_callback,
+        );
+    });
 </script>
 
 <div>
@@ -31,7 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            {#each $sensor_reads[id] as read}
+            {#each $sensor_reads as read}
                 <tr>
                     <td>{read.id}</td>
                     <td>{read.sensor_id}</td>
