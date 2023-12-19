@@ -5,6 +5,9 @@ export default class Parser {
         value = parseFloat(value).toFixed(2);
 
         switch (type) {
+            case SensorTypeEnum.SENSOR_TYPE_CURRENT:
+                value += " A";
+                break;
             case SensorTypeEnum.SENSOR_TYPE_TEMPERATURE:
                 value += " °C";
                 break;
