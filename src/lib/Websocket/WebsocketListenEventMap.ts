@@ -12,7 +12,6 @@ import type Actuator from "$lib/Models/Actuator";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     [WebsocketListenEventEnum.ALL_SENSORS_EVENT]: ({sensors}: { sensors: Sensor[] }) => {
-        console.log("Received all sensors");
         sensorStore.set(
             sensors.reduce((acc, sensor) => {
                 acc[sensor.id] = sensor;
@@ -22,7 +21,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.ALL_LAST_SENSOR_READINGS_EVENT]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
-        console.log("Received all last sensor reads");
         lastSensorsReadStore.set(
             sensor_reads.reduce((acc, read) => {
                 acc[read.sensor_id] = read;
@@ -49,7 +47,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             online: boolean,
             created_at: string,
         }) => {
-        console.log("Received sensor register event");
         sensorStore.update(sensors => {
             sensors[sensor_id] = {
                 id: sensor_id,
@@ -66,7 +63,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.SENSOR_UNREGISTER_EVENT]: ({sensor_id}: { sensor_id: number }) => {
-        console.log("Received sensor unregister event");
         sensorStore.update(sensors => {
             delete sensors[sensor_id];
             return sensors;
@@ -86,7 +82,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             created_at: string,
         }
     ) => {
-        console.log("Received sensor read event");
         lastSensorsReadStore.update(reads => {
             reads[sensor_id] = {
                 id,
@@ -104,11 +99,26 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         sensor_name: string,
         updated_at: string,
     }) => {
-        console.log("Received sensor name change event");
         sensorStore.update(sensors => {
             const sensor = sensors[sensor_id];
             if (sensor) {
                 sensor.name = sensor_name;
+                sensor.updated_at = updated_at;
+                sensors[sensor_id] = sensor;
+            }
+            return {...sensors};
+        });
+    },
+
+    [WebsocketListenEventEnum.SENSOR_CHANGE_ONLINE_EVENT]: ({sensor_id, online, updated_at}: {
+        sensor_id: number,
+        online: boolean,
+        updated_at: string,
+    }) => {
+        sensorStore.update(sensors => {
+            const sensor = sensors[sensor_id];
+            if (sensor) {
+                sensor.online = online;
                 sensor.updated_at = updated_at;
                 sensors[sensor_id] = sensor;
             }
@@ -121,7 +131,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.ALL_ACTUATORS_EVENT]: ({actuators}: { actuators: Actuator[] }) => {
-        console.log("Received all actuators");
         actuatorStore.set(
             actuators.reduce((acc, actuator) => {
                 acc[actuator.id] = actuator;
@@ -137,6 +146,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             actuator_ip_address,
             actuator_port,
             actuator_state,
+            actuator_pulse,
             online,
             created_at,
         }: {
@@ -145,10 +155,10 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             actuator_ip_address: string,
             actuator_port: number,
             actuator_state: boolean,
+            actuator_pulse: boolean,
             online: boolean,
             created_at: string,
         }) => {
-        console.log("Received actuator register event");
         actuatorStore.update(actuators => {
             actuators[actuator_id] = {
                 id: actuator_id,
@@ -156,6 +166,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
                 ip_address: actuator_ip_address,
                 port: actuator_port,
                 state: actuator_state,
+                pulse: actuator_pulse,
                 online,
                 created_at,
                 updated_at: null,
@@ -165,7 +176,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.ACTUATOR_UNREGISTER_EVENT]: ({actuator_id}: { actuator_id: number }) => {
-        console.log("Received actuator unregister event");
         actuatorStore.update(actuators => {
             delete actuators[actuator_id];
             return actuators;
@@ -177,7 +187,6 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         actuator_name: string,
         updated_at: string,
     }) => {
-        console.log("Received actuator name change event");
         actuatorStore.update(actuators => {
             const actuator = actuators[actuator_id];
             if (actuator) {
@@ -194,11 +203,26 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         actuator_state: boolean,
         updated_at: string,
     }) => {
-        console.log("Received actuator state change event");
         actuatorStore.update(actuators => {
             const actuator = actuators[actuator_id];
             if (actuator) {
                 actuator.state = actuator_state;
+                actuator.updated_at = updated_at;
+                actuators[actuator_id] = actuator;
+            }
+            return {...actuators};
+        });
+    },
+
+    [WebsocketListenEventEnum.ACTUATOR_CHANGE_ONLINE_EVENT]: ({actuator_id, online, updated_at}: {
+        actuator_id: number,
+        online: boolean,
+        updated_at: string,
+    }) => {
+        actuatorStore.update(actuators => {
+            const actuator = actuators[actuator_id];
+            if (actuator) {
+                actuator.online = online;
                 actuator.updated_at = updated_at;
                 actuators[actuator_id] = actuator;
             }

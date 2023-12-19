@@ -5,6 +5,7 @@ export default interface Actuator {
     port: number;
     online: boolean;
     state: boolean;
+    pulse: boolean;
     created_at: string;
     updated_at: string | null;
 }

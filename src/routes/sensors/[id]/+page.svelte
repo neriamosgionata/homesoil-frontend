@@ -14,7 +14,6 @@
     const ws: Writable<Websocket> = getContext('ws');
 
     const sensor_read_callback = (data: SensorRead) => {
-        console.log('sensor read callback');
         sensor_reads.update((reads) => {
             return [data, ...reads];
         });
@@ -23,16 +22,16 @@
     onMount(() => {
         sensor_reads.set([]);
 
-        $ws.get_all_sensor_readings(parseInt(id));
+        $ws.getAllSensorReadings(parseInt(id));
 
-        $ws.listen_to_event(
+        $ws.listenToEvent(
             WebsocketListenEventEnum.SENSOR_READ_EVENT,
             sensor_read_callback,
         );
     });
 
     onDestroy(() => {
-        $ws.remove_listener_from_event(
+        $ws.removeListenerFromEvent(
             WebsocketListenEventEnum.SENSOR_READ_EVENT,
             sensor_read_callback,
         );

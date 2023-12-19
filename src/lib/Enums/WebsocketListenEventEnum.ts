@@ -9,6 +9,10 @@ enum WebsocketListenEventEnum {
     SENSOR_READ_EVENT = "sensor-read",
     ALL_SENSOR_READINGS = "all-sensor-reads",
 
+    SENSOR_CHANGE_ONLINE_EVENT = "sensor-change-online",
+
+//    ------------------------------------------------------
+
     ALL_ACTUATORS_EVENT = "all-actuators",
 
     ACTUATOR_REGISTER_EVENT = "actuator-register",
@@ -16,6 +20,8 @@ enum WebsocketListenEventEnum {
 
     ACTUATOR_NAME_CHANGE_EVENT = "actuator-name-change",
     ACTUATOR_STATE_CHANGE_EVENT = "actuator-state-change",
+
+    ACTUATOR_CHANGE_ONLINE_EVENT = "actuator-change-online",
 }
 
 export default WebsocketListenEventEnum;

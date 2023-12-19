@@ -17,10 +17,14 @@ export class Websocket {
         try {
             // @ts-ignore
             this.socket = io(
-                (import.meta.env.VITE_SOCKET_ENDPOINT || "http://localhost:4000/").trim()
+                (import.meta.env.VITE_SOCKET_ENDPOINT || "http://localhost:4000/").trim(),
+                {
+                    upgrade: true,
+                    rememberUpgrade: true,
+                }
             );
 
-            this.register_callbacks();
+            this.registerEventListeners();
         } catch (e) {
             console.error("Error while initializing SocketIO", e);
         }
@@ -30,7 +34,7 @@ export class Websocket {
         this.socket?.disconnect();
     }
 
-    private register_callbacks() {
+    private registerEventListeners() {
         Object
             .entries(WebsocketListenEventMap)
             .forEach(([event, callback]) => {
@@ -39,23 +43,27 @@ export class Websocket {
             });
     }
 
-    private emit_event(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
+    private emitEvent(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
         this.socket?.emit(event, data);
     }
 
-    get_all_sensor_readings(sensor_id: number) {
-        this.emit_event(WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT, sensor_id);
+    getAllSensorReadings(sensor_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT, sensor_id);
     }
 
     toggleActuator(actuator_id: number) {
-        this.emit_event(WebsocketEmitEventEnum.TOGGLE_ACTUATOR_EVENT, actuator_id);
+        this.emitEvent(WebsocketEmitEventEnum.TOGGLE_ACTUATOR_EVENT, actuator_id);
     }
 
-    listen_to_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+    pulseActuator(actuator_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.PULSE_ACTUATOR_EVENT, actuator_id);
+    }
+
+    listenToEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
         this.socket?.on(event, callback);
     }
 
-    remove_listener_from_event(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+    removeListenerFromEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
         this.socket?.off(event, callback);
     }
 }

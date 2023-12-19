@@ -14,9 +14,9 @@
     };
 </script>
 
-<div class="flex flex-col justify-center px-4 py-4 bg-white border border-gray-300 rounded">
+<div class="flex flex-col justify-center px-3 py-3 bg-white border border-gray-300 rounded">
     <div aria-roledescription="button" role="button" tabindex={index} on:click={() => goToDetails()} on:keydown={() => {}}>
-        <p class="text-3xl font-semibold text-center text-gray-800">{parsedValue}</p>
-        <p class="text-lg text-center text-gray-500">{sensor.name}</p>
+        <p class="text-xl font-semibold text-center text-gray-800">{parsedValue}</p>
+        <p class="text-sm text-center text-gray-500">{sensor.name}</p>
     </div>
 </div>
