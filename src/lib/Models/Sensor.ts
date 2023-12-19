@@ -5,6 +5,7 @@ export default interface Sensor {
     name: string;
     sensor_type: SensorTypeEnum;
     ip_address: string;
+    port: number;
     online: boolean;
     created_at: string;
     updated_at: string | null;
