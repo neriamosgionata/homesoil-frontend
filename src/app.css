@@ -10,19 +10,3 @@ body {
 body * {
     @apply transition-colors duration-150;
 }
-
-pre {
-    display: inline-flex;
-    padding: 0.5rem;
-    width: 100%;
-    border-radius: 0.25rem
-}
-
-ol {
-    list-style: number;
-    padding: 1rem;
-}
-
-ol > li {
-    margin: 1rem 0;
-}
