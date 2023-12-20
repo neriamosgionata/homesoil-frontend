@@ -46,9 +46,9 @@
 <div class="flex flex-col justify-center px-3 py-3 bg-white border border-gray-300 rounded">
     <div aria-roledescription="button" role="button" tabindex={index} on:click={() => {}} on:keydown={() => {}}>
         <div class="flex flex-col justify-center py-2">
-            <p class="text-sm text-center text-gray-500 font-bold py-3 hover:text-blue-500 flex flex-row justify-center px-2 items-center">
+            <p class="text-sm text-center text-gray-500 font-bold py-3 hover:text-blue-500 flex flex-row justify-center items-center mx-auto">
                 {#if !isRenaming}
-                    <span class="hover:underline hover:cursor-pointer">{actuator.name}</span>
+                    <span class="hover:underline hover:cursor-pointer block mr-3">{actuator.name}</span>
 
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="16"

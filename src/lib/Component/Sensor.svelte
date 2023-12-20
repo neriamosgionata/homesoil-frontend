@@ -57,10 +57,10 @@
         <div class="flex flex-col justify-center py-2">
             {#if !isRenaming}
                 <button
-                        class="text-sm rounded text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center px-2 items-center"
+                        class="text-sm rounded text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center items-center mx-auto"
                         on:click={(e) => goToDetails(e)}
                 >
-                    <span class="hover:underline hover:cursor-pointer">
+                    <span class="hover:underline hover:cursor-pointer block mr-3">
                         {sensor.name}
                     </span>
 

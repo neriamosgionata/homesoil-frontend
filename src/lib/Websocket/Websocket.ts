@@ -43,7 +43,7 @@ export class Websocket {
     }
 
     private emitEvent(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
-        this.socket.emit(event, data);
+        this.socket.emit(event, typeof data === "object" && !(data instanceof Date) ? JSON.stringify(data) : data);
     }
 
     listenToEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
