@@ -1,17 +1,19 @@
 <script lang="ts">
-    import {sensor_reads, sensors} from "$lib/stores/store";
+    import {sensor_reads, sensor_reads_loading, sensors} from "$lib/stores/store";
     import {page} from '$app/stores';
-    import {getContext, onDestroy, onMount} from "svelte";
-    import type {Writable} from "svelte/store";
+    import {getContext, onMount} from "svelte";
+    import {writable, type Writable} from "svelte/store";
     import type {Websocket} from "$lib/Websocket/Websocket";
-    import WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
-    import type SensorRead from "$lib/Models/SensorRead";
-    import Parser from "$lib/Parser/Parser.js";
     import moment from "moment";
+    import ProgressBar from "$lib/Component/ProgressBar.svelte";
+    import Parser from "$lib/Parser/Parser";
 
     let id = $page.params.id;
 
     const ws: Writable<Websocket> = getContext('ws');
+
+    let from_date: Writable<Date> = writable(moment().subtract(5, "minutes").toDate());
+    let to_date: Writable<Date> = writable(moment().toDate());
 
     let isRenaming = false;
     let newName = "";
@@ -29,33 +31,62 @@
         isRenaming = false;
     };
 
-    const sensor_read_callback = (data: SensorRead) => {
-        sensor_reads.update((reads) => {
-            return [data, ...reads];
-        });
+    const newFromDate = (e: any) => {
+        from_date.set(moment(e.target.value).toDate());
+    };
+
+    const newToDate = (e: any) => {
+        to_date.set(moment(e.target.value).toDate());
     };
 
     onMount(() => {
         sensor_reads.set([]);
-
-        $ws.getAllSensorReadings(parseInt(id));
-
-        $ws.listenToEvent(
-            WebsocketListenEventEnum.SENSOR_READ_EVENT,
-            sensor_read_callback,
-        );
     });
 
-    onDestroy(() => {
-        $ws.removeListenerFromEvent(
-            WebsocketListenEventEnum.SENSOR_READ_EVENT,
-            sensor_read_callback,
+    $: {
+        sensor_reads_loading.set(true);
+        $ws.getAllSensorReadings(
+            parseInt(id),
+            $from_date,
+            $to_date,
         );
-    });
+    }
 </script>
 
 <div class="p-4">
-    <h1 class="text-3xl font-bold text-gray-600">Sensor ID: {id}</h1>
+    <div class="m-4">
+        <a href="/" class="text-blue-500 hover:text-blue-700">Back to home</a>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-600 px-4">Sensor ID: {id}</h1>
+
+    {#if $sensor_reads_loading}
+        <ProgressBar/>
+    {/if}
+
+    <div class="m-4">
+        <label for="from_date" class="text-gray-700">From date:</label>
+        <input
+                type="datetime-local"
+                id="from_date"
+                name="from_date"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline { $sensor_reads_loading ? 'cursor-not-allowed opacity-50' : '' }"
+                on:input={(e) => newFromDate(e)}
+                disabled={$sensor_reads_loading}
+        />
+    </div>
+
+    <div class="m-4">
+        <label for="to_date" class="text-gray-700">To date:</label>
+        <input
+                type="datetime-local"
+                id="to_date"
+                name="to_date"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline { $sensor_reads_loading ? 'cursor-not-allowed opacity-50' : '' }"
+                on:input={(e) => newToDate(e)}
+                disabled={$sensor_reads_loading}
+        />
+    </div>
 
     <div class="m-4">
         {#if isRenaming}
@@ -81,17 +112,13 @@
                 Save
             </button>
         {:else}
-            <span class="text-gray-700">Name: {$sensors[id].name}</span>
+            <span class="text-gray-700 mr-3">Name: {$sensors[id].name}</span>
 
             <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                     on:click={() => renameSensor()}>
                 Rename sensor
             </button>
         {/if}
-    </div>
-
-    <div class="m-4">
-        <a href="/" class="text-blue-500 hover:text-blue-700">Back to home</a>
     </div>
 
     <div class="grid grid-cols-1 gap-4 mx-8">

@@ -7,3 +7,4 @@ export const sensors: Writable<{ [p: string | number]: Sensor }> = writable({});
 export const last_sensor_reads: Writable<{ [p: string | number]: SensorRead }> = writable({});
 export const sensor_reads: Writable<SensorRead[]> = writable([]);
 export const actuators: Writable<{ [p: string | number]: Actuator }> = writable({});
+export const sensor_reads_loading: Writable<boolean> = writable(false);

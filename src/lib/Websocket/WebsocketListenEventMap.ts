@@ -4,6 +4,7 @@ import {
     actuators as actuatorStore,
     last_sensor_reads as lastSensorsReadStore,
     sensor_reads as sensorReadStore,
+    sensor_reads_loading,
     sensors as sensorStore,
 } from "$lib/stores/store";
 import type SensorRead from "$lib/Models/SensorRead";
@@ -128,6 +129,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
 
     [WebsocketListenEventEnum.ALL_SENSOR_READINGS]: ({sensor_reads}: { sensor_reads: SensorRead[] }) => {
         sensorReadStore.set(sensor_reads);
+        setTimeout(() => sensor_reads_loading.set(false), 1000);
     },
 
     [WebsocketListenEventEnum.ALL_ACTUATORS_EVENT]: ({actuators}: { actuators: Actuator[] }) => {

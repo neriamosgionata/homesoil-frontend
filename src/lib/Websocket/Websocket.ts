@@ -7,6 +7,8 @@ import WebsocketEmitEventEnum from "$lib/Enums/WebsocketEmitEventEnum";
 import type {EventParams} from "socket.io/dist/typed-events";
 import type WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
 
+import moment from "moment";
+
 export class Websocket {
     private socket!: Socket<
         typeof WebsocketListenEventMap,
@@ -54,8 +56,15 @@ export class Websocket {
         this.socket.off(event, callback);
     }
 
-    getAllSensorReadings(sensor_id: number) {
-        this.emitEvent(WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT, sensor_id);
+    getAllSensorReadings(sensor_id: number, from_date: Date, to_date: Date) {
+        this.emitEvent(
+            WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT,
+            JSON.stringify({
+                id: sensor_id,
+                from_date: moment(from_date).format("YYYY-MM-DD HH:mm:ss"),
+                to_date: moment(to_date).format("YYYY-MM-DD HH:mm:ss")
+            })
+        );
     }
 
     toggleActuator(actuator_id: number) {

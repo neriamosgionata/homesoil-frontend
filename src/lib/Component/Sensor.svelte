@@ -44,25 +44,24 @@
 
     const goToDetails = (e: MouseEvent) => {
         e.preventDefault();
-        if (!(e.target instanceof HTMLButtonElement)) {
-            return;
-        }
         goto(`/sensors/${sensor.id}`);
     };
 </script>
 
-<div class="flex flex-col justify-center px-3 py-3 bg-white border border-gray-300 rounded">
+<div class="flex flex-col p-3 bg-white border border-gray-300 rounded">
+
     <div aria-roledescription="button" role="button" tabindex={index}>
 
         <div class="flex flex-col justify-center py-2">
             {#if !isRenaming}
-                <button
-                        class="text-sm rounded text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center items-center mx-auto"
-                        on:click={(e) => goToDetails(e)}
-                >
-                    <span class="hover:underline hover:cursor-pointer block mr-3">
-                        {sensor.name}
-                    </span>
+                <p class="text-sm text-center text-gray-500 font-bold py-2 hover:text-blue-500 flex flex-row justify-center items-center mx-auto">
+                    <button
+                            on:click={(e) => goToDetails(e)}
+                    >
+                        <span class="hover:underline hover:cursor-pointer block mr-3">
+                            {sensor.name}
+                        </span>
+                    </button>
 
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="16"
@@ -77,18 +76,19 @@
                     >
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                     </svg>
-                </button>
+                </p>
             {:else}
-                <input type="text" class="w-10/12 px-2 py-1 text-sm text-gray-700 border border-gray-300 rounded"
+                <input type="text" class="w-10/12 p-2 text-sm text-gray-700 border border-gray-300 rounded mx-auto"
                        bind:value={newName}
                        on:keydown={(e) => handleKeyDown(e)}
                 />
             {/if}
         </div>
 
-        <div class="flex flex-row justify-center py-1">
-            <p class="text-xl font-semibold text-center text-gray-800 mb-2">{parsedValue}</p>
-
+        <div class="flex flex-row justify-center py-2">
+            <p class="text-xl font-semibold text-center text-gray-800">
+                {parsedValue}
+            </p>
         </div>
 
     </div>
