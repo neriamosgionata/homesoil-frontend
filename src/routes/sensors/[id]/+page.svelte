@@ -13,6 +13,22 @@
 
     const ws: Writable<Websocket> = getContext('ws');
 
+    let isRenaming = false;
+    let newName = "";
+
+    const renameSensor = () => {
+        isRenaming = true;
+    };
+
+    const handleRenaming = () => {
+        $ws.renameSensor(parseInt(id), newName);
+        isRenaming = false;
+    };
+
+    const handleRenamingCancel = () => {
+        isRenaming = false;
+    };
+
     const sensor_read_callback = (data: SensorRead) => {
         sensor_reads.update((reads) => {
             return [data, ...reads];
@@ -40,6 +56,39 @@
 
 <div class="p-4">
     <h1 class="text-3xl font-bold text-gray-600">Sensor ID: {id}</h1>
+
+    <div class="m-4">
+        {#if isRenaming}
+            <input
+                    type="text"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder={$sensors[id].name}
+                    bind:value={newName}
+            />
+
+            <button
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                    on:click={() => handleRenamingCancel()}
+            >
+                Cancel
+            </button>
+
+            <button
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded {!newName ? 'opacity-50 cursor-not-allowed' : ''}"
+                    disabled={!newName}
+                    on:click={() => handleRenaming()}
+            >
+                Save
+            </button>
+        {:else}
+            <span class="text-gray-700">Name: {$sensors[id].name}</span>
+
+            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    on:click={() => renameSensor()}>
+                Rename sensor
+            </button>
+        {/if}
+    </div>
 
     <div class="m-4">
         <a href="/" class="text-blue-500 hover:text-blue-700">Back to home</a>

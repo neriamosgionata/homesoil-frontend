@@ -10,7 +10,6 @@
     setContext("ws", ws);
 
     onMount(() => {
-        $ws.close();
         $ws.init();
     });
 

@@ -38,13 +38,20 @@ export class Websocket {
         Object
             .entries(WebsocketListenEventMap)
             .forEach(([event, callback]) => {
-                console.log("Registering callback for event", event);
                 this.socket.on(event, callback);
             });
     }
 
     private emitEvent(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
-        this.socket?.emit(event, data);
+        this.socket.emit(event, data);
+    }
+
+    listenToEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+        this.socket.on(event, callback);
+    }
+
+    removeListenerFromEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
+        this.socket.off(event, callback);
     }
 
     getAllSensorReadings(sensor_id: number) {
@@ -59,11 +66,11 @@ export class Websocket {
         this.emitEvent(WebsocketEmitEventEnum.PULSE_ACTUATOR_EVENT, actuator_id);
     }
 
-    listenToEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
-        this.socket?.on(event, callback);
+    renameActuator(actuator_id: number, name: string) {
+        this.emitEvent(WebsocketEmitEventEnum.RENAME_ACTUATOR_EVENT, {id: actuator_id, name});
     }
 
-    removeListenerFromEvent(event: WebsocketListenEventEnum, callback: (...args: any[]) => void) {
-        this.socket?.off(event, callback);
+    renameSensor(sensor_id: number, name: string) {
+        this.emitEvent(WebsocketEmitEventEnum.RENAME_SENSOR_EVENT, {id: sensor_id, name});
     }
 }
