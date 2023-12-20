@@ -8,5 +8,5 @@ body {
 }
 
 body * {
-    @apply transition-colors duration-150;
+    @apply transition-colors duration-75;
 }
