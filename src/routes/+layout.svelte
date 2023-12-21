@@ -18,6 +18,6 @@
     });
 </script>
 
-<div class="w-full h-full bg-blue-200">
+<div class="w-full h-full flex flex-col bg-[#003f5c]">
     <slot/>
 </div>

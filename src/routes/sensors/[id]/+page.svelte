@@ -7,6 +7,7 @@
     import moment from "moment";
     import ProgressBar from "$lib/Component/ProgressBar.svelte";
     import Parser from "$lib/Parser/Parser";
+    import {fly} from "svelte/transition";
 
     let id = $page.params.id;
 
@@ -126,8 +127,11 @@
         </div>
 
         <div class="grid grid-cols-1 gap-4 mx-8">
-            {#each $sensor_reads as read}
-                <div class="bg-white overflow-hidden shadow rounded-lg">
+            {#each $sensor_reads as read, i}
+                <div
+                        class="bg-white overflow-hidden shadow rounded-lg"
+                        in:fly={{duration: 750, x: 250, delay: 100 + (i * 50)}}
+                >
                     <div class="px-2 py-3">
                         <dl>
                             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-5">
