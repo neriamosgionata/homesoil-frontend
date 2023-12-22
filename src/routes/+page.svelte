@@ -1,54 +1,32 @@
 <script lang="ts">
-    import {actuators, sensors} from "$lib/stores/store";
-    import Sensor from "$lib/Component/Sensor.svelte";
-    import Actuator from "$lib/Component/Actuator.svelte";
-    import {fade} from "svelte/transition";
+    import {socket_token} from "$lib/stores/store";
+    import {goto} from "$app/navigation";
 
-    $: sensorsArray = Object.values($sensors);
-    $: actuatorsArray = Object.values($actuators);
+    let token = "";
 
+    const login = () => {
+        if (!token) {
+            return;
+        }
+
+        socket_token.set({token});
+        setTimeout(() => goto("/dashboard"), 100);
+    };
 </script>
 
-<style>
-    .grid-shadow {
-        box-shadow: rgba(50, 50, 93, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0 30px 60px -30px;
-    }
-</style>
-
-<div class="p-8 h-100 w-100">
-
-    <h1 class="text-2xl font-bold text-[#ff6361]">Sensors</h1>
-
-    <div
-            class="grid gap-4 grid-cols-12 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
-    >
-        {#each sensorsArray as sensor,i}
-            <div
-                    in:fade={{duration: 250, delay: 100 + (i * 100)}}
-            >
-                <Sensor
-                        sensor={sensor}
-                        index={i}
-                />
-            </div>
-        {/each}
-    </div>
-
-    <div class="h-24"></div>
-
-    <h1 class="text-2xl font-bold text-[#ff6361]">Actuators</h1>
-
-    <div
-            class="grid gap-4 grid-cols-12 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
-    >
-        {#each actuatorsArray as actuator,i}
-            <div
-                    in:fade={{duration: 250, delay: 250 + (i * 100)}}
-            >
-                <Actuator
-                        actuator={actuator} index={i}
-                />
-            </div>
-        {/each}
-    </div>
+<div class="container">
+    <form class="bg-blue text-center w-1/3 px-3 py-4 text-white mx-auto rounded">
+        <input
+                type="password"
+                placeholder="Token"
+                class="block w-full mx-auto text-sm py-2 px-3 rounded my-3 text-gray-700"
+                bind:value={token}
+        />
+        <button
+                class="text-white font-bold py-2 px-4 rounded border block mx-auto w-full bg-blue-500 hover:bg-blue-700"
+                on:click={() => login()}
+        >
+            Login
+        </button>
+    </form>
 </div>

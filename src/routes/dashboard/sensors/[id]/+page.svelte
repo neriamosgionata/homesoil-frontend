@@ -54,10 +54,10 @@
     }
 </script>
 
-<div class="p-4">
+<div class="container">
     <div class="bg-gray-100 rounded-lg shadow-xl py-2">
         <button class="m-4 text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-700">
-            <a href="/">Back</a>
+            <a href="/dashboard">Back</a>
         </button>
 
         <h1 class="text-2xl text-center font-bold mb-4 text-gray-600">Sensor: {$sensors[id].name}</h1>

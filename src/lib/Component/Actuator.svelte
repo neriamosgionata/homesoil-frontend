@@ -5,7 +5,6 @@
     import type Actuator from "$lib/Models/Actuator";
 
     export let actuator: Actuator;
-    export let index: number;
 
     const ws: Writable<Websocket> = getContext("ws");
 

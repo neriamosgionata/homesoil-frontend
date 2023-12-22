@@ -8,6 +8,9 @@ import type {EventParams} from "socket.io/dist/typed-events";
 import type WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
 
 import moment from "moment";
+import {socket_token} from "$lib/stores/store";
+import {get} from 'svelte/store';
+import {goto} from "$app/navigation";
 
 export class Websocket {
     private socket!: Socket<
@@ -15,21 +18,27 @@ export class Websocket {
         typeof WebsocketEmitEventMap
     >;
 
-    init() {
-        try {
-            // @ts-ignore
-            this.socket = io(
-                (import.meta.env.VITE_SOCKET_ENDPOINT || "http://localhost:4000/").trim(),
-                {
-                    upgrade: true,
-                    rememberUpgrade: true,
+    connect() {
+        // @ts-ignore
+        this.socket = io(
+            (import.meta.env.VITE_SOCKET_ENDPOINT || "http://localhost:4000/").trim(),
+            {
+                transports: ["websocket", "polling"],
+                upgrade: true,
+                rememberUpgrade: true,
+                auth: {
+                    token: get(socket_token).token
                 }
-            );
+            }
+        );
 
-            this.registerEventListeners();
-        } catch (e) {
-            console.error("Error while initializing SocketIO", e);
-        }
+        this.socket.on("disconnect", () => {
+            console.log("Disconnected from websocket server");
+
+            goto("/");
+        });
+
+        this.registerEventListeners();
     }
 
     close() {

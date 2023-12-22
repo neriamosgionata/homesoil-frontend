@@ -8,7 +8,6 @@
     import type {Websocket} from "$lib/Websocket/Websocket";
 
     export let sensor: Sensor;
-    export let index: number;
 
     $: parsedValue = $last_sensor_reads[sensor.id] ? Parser.parseSensorReadValue($last_sensor_reads[sensor.id].sensor_value, sensor.sensor_type) : "No data";
 
@@ -44,7 +43,7 @@
 
     const goToDetails = (e: MouseEvent) => {
         e.preventDefault();
-        goto(`/sensors/${sensor.id}`);
+        goto(`/dashboard/sensors/${sensor.id}`);
     };
 </script>
 
