@@ -2,8 +2,6 @@
     import {socket_token} from "$lib/stores/store";
     import {goto} from "$app/navigation";
 
-    export const ssr = false;
-
     let token = "";
 
     const login = () => {

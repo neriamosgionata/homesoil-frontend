@@ -4,8 +4,6 @@
     import Actuator from "$lib/Component/Actuator.svelte";
     import {fade} from "svelte/transition";
 
-    export const ssr = false;
-
     $: sensorsArray = Object.values($sensors);
     $: actuatorsArray = Object.values($actuators);
 

@@ -9,8 +9,6 @@
     import Parser from "$lib/Parser/Parser";
     import {fly} from "svelte/transition";
 
-    export const ssr = false;
-
     let id = $page.params.id;
 
     const ws: Writable<Websocket> = getContext('ws');
