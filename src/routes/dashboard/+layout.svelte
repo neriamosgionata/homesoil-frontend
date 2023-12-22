@@ -3,6 +3,8 @@
     import {onDestroy, onMount, setContext} from "svelte";
     import {writable} from "svelte/store";
 
+    export const ssr = false;
+
     const ws = writable(new Websocket());
 
     setContext("ws", ws);

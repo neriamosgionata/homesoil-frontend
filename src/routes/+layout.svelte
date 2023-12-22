@@ -1,5 +1,7 @@
 <script lang="ts">
     import "../app.css";
+
+    export const ssr = false;
 </script>
 
 <div class="w-full h-full flex flex-col bg-[#003f5c]">
