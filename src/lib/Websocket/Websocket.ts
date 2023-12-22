@@ -1,5 +1,5 @@
 import {io} from 'socket.io-client';
-import {Socket} from "socket.io";
+import type {Socket} from "socket.io";
 import WebsocketListenEventMap from "$lib/Websocket/WebsocketListenEventMap";
 import WebsocketEmitEventMap from "$lib/Websocket/WebsocketEmitEventMap";
 import WebsocketEmitEventEnum from "$lib/Enums/WebsocketEmitEventEnum";
