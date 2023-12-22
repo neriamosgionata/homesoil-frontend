@@ -21,7 +21,7 @@ export class Websocket {
     connect() {
         // @ts-ignore
         this.socket = io(
-            (import.meta.env.VITE_SOCKET_ENDPOINT || "http://localhost:4000/").trim(),
+            (location.hostname + ":4000").trim(),
             {
                 transports: ["websocket", "polling"],
                 upgrade: true,
