@@ -47,9 +47,9 @@
     };
 </script>
 
-<div class="flex flex-col p-3 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
+<div class="flex flex-col p-1 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
 
-    <div class="flex flex-col justify-center py-2">
+    <div class="flex flex-col justify-center pb-2 px-2">
         {#if !isRenaming}
             <p class="text-sm text-center text-gray-500 font-bold py-2 hover:text-blue-500 flex flex-row justify-center items-center mx-auto">
                 <button
@@ -82,7 +82,22 @@
         {/if}
     </div>
 
-    <hr class="border-gray-300"/>
+    <div class="rounded-xl flex flex-row justify-center items-center py-2 w-100 h-6 bg-white">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="16"
+             height="16"
+             fill="currentColor"
+             class="{'bi bi-circle-fill ' + (sensor.online ? 'text-green-400' : 'text-gray-300')}"
+             viewBox="0 0 16 16"
+        >
+            <circle cx="8" cy="8" r="8"/>
+        </svg>
+        <p class={'text-xs font-bold ml-2 ' + (sensor.online ? 'text-green-400' : 'text-gray-300')}>
+            {sensor.online ? "Online" : "Offline"}
+        </p>
+    </div>
+
+    <hr class="border-gray-300 mt-1"/>
 
     <div class="flex flex-row justify-center py-2 mt-2">
         <p class="text-xl font-semibold text-center text-gray-800">

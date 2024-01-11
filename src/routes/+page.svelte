@@ -14,7 +14,7 @@
     };
 </script>
 
-<div class="container">
+<div class="w-100 h-100">
     <form class="bg-blue text-center w-1/3 px-3 py-4 text-white mx-auto rounded">
         <input
                 type="password"

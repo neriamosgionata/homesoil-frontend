@@ -40,11 +40,13 @@
     const pulse = () => {
         $ws.pulseActuator(actuator.id);
     };
+
+    $: isDisabled = !actuator.online || actuator.state;
 </script>
 
-<div class="flex flex-col p-3 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
+<div class="flex flex-col p-1 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
 
-    <div class="flex flex-col justify-center py-2">
+    <div class="flex flex-col justify-center pb-2 px-2">
         {#if !isRenaming}
             <p class="text-sm text-center text-gray-500 font-bold py-2 hover:text-blue-500 flex flex-row justify-center items-center mx-auto">
                     <span class="hover:underline hover:cursor-pointer block mr-3">
@@ -73,14 +75,30 @@
         {/if}
     </div>
 
-    <hr class="border-gray-300"/>
+    <div class="rounded-xl flex flex-row justify-center items-center py-2 w-100 h-6 bg-white">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="16"
+             height="16"
+             fill="currentColor"
+             class="{'bi bi-circle-fill ' + (actuator.online ? 'text-green-400' : 'text-gray-300')}"
+             viewBox="0 0 16 16"
+        >
+            <circle cx="8" cy="8" r="8"/>
+        </svg>
+        <p class={'text-xs font-bold ml-2 ' + (actuator.online ? 'text-green-400' : 'text-gray-300')}>
+            {actuator.online ? "Online" : "Offline"}
+        </p>
+    </div>
+
+    <hr class="border-gray-300 mt-1"/>
 
     <div class="flex flex-col justify-center py-2 mt-2">
         <p class="text-3xl font-semibold text-center text-gray-800">
             {#if actuator.pulse}
                 <button
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        class={'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ' + (isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}
                         on:click={() => pulse()}
+                        disabled={isDisabled}
                 >
                         <span class="text-xs justify-center flex">
                             {#if actuator.state}
@@ -95,12 +113,13 @@
                         </span>
                 </button>
             {:else}
-                <label class="relative inline-flex items-center cursor-pointer">
+                <label class={'relative inline-flex items-center ' + (isDisabled ? 'cursor-not-allowed' : 'cursor-pointer')}>
                     <input
                             type="checkbox"
                             value=""
                             class="sr-only peer"
                             on:click={() => toggle()}
+                            disabled={isDisabled}
                             bind:checked={actuator.state}
                     >
                     <span class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white"></span>

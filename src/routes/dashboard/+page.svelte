@@ -15,11 +15,11 @@
     }
 </style>
 
-<div class="container">
+<div class="w-4/5 h-100 mx-auto">
     <h1 class="text-2xl font-bold text-[#ff6361]">Sensors</h1>
 
     <div
-            class="grid gap-4 grid-cols-12 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
+            class="grid gap-4 grid-cols-6 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
     >
         {#each sensorsArray as sensor,i}
             <div
@@ -35,11 +35,11 @@
     <h1 class="text-2xl font-bold text-[#ff6361]">Actuators</h1>
 
     <div
-            class="grid gap-4 grid-cols-12 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-9 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
+            class="grid gap-4 grid-cols-6 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-6 bg-gray-100 rounded-lg p-2 grid-shadow min-w-[50px] mt-4"
     >
         {#each actuatorsArray as actuator,i}
             <div
-                    in:fade={{duration: 250, delay: 250 + (i * 100)}}
+                    in:fade={{duration: 250, delay: 200 + (i * 100)}}
             >
                 <Actuator actuator={actuator}/>
             </div>
