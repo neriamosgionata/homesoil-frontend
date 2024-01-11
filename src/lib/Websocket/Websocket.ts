@@ -91,4 +91,12 @@ export class Websocket {
     renameSensor(sensor_id: number, name: string) {
         this.emitEvent(WebsocketEmitEventEnum.RENAME_SENSOR_EVENT, {id: sensor_id, name});
     }
+
+    removeActuator(actuator_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.REMOVE_ACTUATOR_EVENT, {id: actuator_id});
+    }
+
+    removeSensor(sensor_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.REMOVE_SENSOR_EVENT,  {id: sensor_id});
+    }
 }

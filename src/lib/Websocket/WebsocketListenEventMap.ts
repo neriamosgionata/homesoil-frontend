@@ -64,6 +64,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.SENSOR_UNREGISTER_EVENT]: ({sensor_id}: { sensor_id: number }) => {
+        console.log("SENSOR_UNREGISTER_EVENT", sensor_id);
         sensorStore.update(sensors => {
             delete sensors[sensor_id];
             return sensors;
@@ -178,6 +179,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     },
 
     [WebsocketListenEventEnum.ACTUATOR_UNREGISTER_EVENT]: ({actuator_id}: { actuator_id: number }) => {
+        console.log("ACTUATOR_UNREGISTER_EVENT", actuator_id);
         actuatorStore.update(actuators => {
             delete actuators[actuator_id];
             return actuators;
