@@ -10,6 +10,7 @@ import {
 import type SensorRead from "$lib/Models/SensorRead";
 import type SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
 import type Actuator from "$lib/Models/Actuator";
+import {get} from "svelte/store";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     [WebsocketListenEventEnum.ALL_SENSORS_EVENT]: ({sensors}: { sensors: Sensor[] }) => {
@@ -94,6 +95,19 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
             };
             return {...reads};
         });
+
+        if (get(sensorReadStore).length && get(sensorReadStore)[0].sensor_id === sensor_id) {
+            sensorReadStore.update(reads => {
+                reads.unshift({
+                    id,
+                    sensor_id,
+                    sensor_value,
+                    created_at,
+                    updated_at: null,
+                });
+                return [...reads];
+            });
+        }
     },
 
     [WebsocketListenEventEnum.SENSOR_NAME_CHANGE_EVENT]: ({sensor_id, sensor_name, updated_at}: {

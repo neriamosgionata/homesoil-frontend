@@ -1,7 +1,7 @@
 <script lang="ts">
     import {sensor_reads, sensor_reads_loading, sensors} from "$lib/stores/store";
     import {page} from '$app/stores';
-    import {getContext, onMount} from "svelte";
+    import {getContext, onDestroy, onMount} from "svelte";
     import {writable, type Writable} from "svelte/store";
     import type {Websocket} from "$lib/Websocket/Websocket";
     import moment from "moment";
@@ -41,6 +41,10 @@
     };
 
     onMount(() => {
+        sensor_reads.set([]);
+    });
+
+    onDestroy(() => {
         sensor_reads.set([]);
     });
 
