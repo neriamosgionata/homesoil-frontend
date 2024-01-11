@@ -66,9 +66,14 @@
         {#if !isRenaming}
             <div class="flex flex-col justify-center items-center py-2">
                 <p class="text-sm text-center text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center items-center">
-                        <span class="hover:underline hover:cursor-pointer block mr-3">
-                            {actuator.name}
-                        </span>
+                    <span class="hover:underline hover:cursor-pointer block mr-3">
+                        {actuator.name}
+                    </span>
+                </p>
+                <p class="text-xs text-center text-gray-500 hover:text-blue-500 flex flex-row justify-center items-center">
+                    <span class="hover:underline hover:cursor-pointer block mr-3">
+                        {actuator.ip_address}
+                    </span>
                 </p>
                 <div class="grid grid-cols-2 gap-2 text-sm text-center text-gray-500 font-bold mt-2">
                     <svg xmlns="http://www.w3.org/2000/svg"
