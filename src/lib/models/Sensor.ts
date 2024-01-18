@@ -1,4 +1,4 @@
-import type SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
+import type SensorTypeEnum from "$lib/enums/SensorTypeEnum";
 
 export default interface Sensor {
     id: number;

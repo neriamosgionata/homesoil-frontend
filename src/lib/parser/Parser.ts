@@ -1,4 +1,4 @@
-import SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
+import SensorTypeEnum from "$lib/enums/SensorTypeEnum";
 
 export default class Parser {
     static parseSensorReadValue(value: string, type: SensorTypeEnum): string {

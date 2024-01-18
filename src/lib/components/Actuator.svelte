@@ -1,8 +1,8 @@
 <script lang="ts">
     import type {Writable} from "svelte/store";
-    import type {Websocket} from "$lib/Websocket/Websocket";
+    import type {Websocket} from "$lib/websocket/Websocket";
     import {getContext} from "svelte";
-    import type Actuator from "$lib/Models/Actuator";
+    import type Actuator from "$lib/models/Actuator";
 
     export let actuator: Actuator;
 

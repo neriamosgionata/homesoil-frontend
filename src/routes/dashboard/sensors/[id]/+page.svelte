@@ -3,10 +3,10 @@
     import {page} from '$app/stores';
     import {getContext, onDestroy, onMount} from "svelte";
     import {writable, type Writable} from "svelte/store";
-    import type {Websocket} from "$lib/Websocket/Websocket";
+    import type {Websocket} from "$lib/websocket/Websocket";
     import moment from "moment";
-    import ProgressBar from "$lib/Component/ProgressBar.svelte";
-    import Parser from "$lib/Parser/Parser";
+    import ProgressBar from "$lib/components/ProgressBar.svelte";
+    import Parser from "$lib/parser/Parser";
     import {fly} from "svelte/transition";
 
     let id = $page.params.id;

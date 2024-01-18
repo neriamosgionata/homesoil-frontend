@@ -7,6 +7,14 @@ enum WebsocketEmitEventEnum {
     PULSE_ACTUATOR_EVENT = "pulse-actuator",
     RENAME_ACTUATOR_EVENT = "rename-actuator",
     REMOVE_ACTUATOR_EVENT = "remove-actuator",
+
+    RUN_SCRIPT_EVENT = "run-script",
+
+    ADD_SCRIPT_EVENT = "add-script",
+    REMOVE_SCRIPT_EVENT = "remove-script",
+    MODIFY_SCRIPT_EVENT = "modify-script",
+    ADD_SCRIPT_SCHEDULE_EVENT = "add-script-schedule",
+    REMOVE_SCRIPT_SCHEDULE_EVENT = "remove-script-schedule",
 }
 
 export default WebsocketEmitEventEnum;

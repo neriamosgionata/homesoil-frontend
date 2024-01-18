@@ -1,11 +1,26 @@
 import adapter from '@sveltejs/adapter-auto';
 import {vitePreprocess} from '@sveltejs/vite-plugin-svelte';
+import preprocessReact from "svelte-preprocess-react/preprocessReact";
+import preprocess from "svelte-preprocess";
+import {markdown} from "svelte-preprocess-markdown";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
     // Consult https://kit.svelte.dev/docs/integrations#preprocessors
     // for more information about preprocessors
-    preprocess: vitePreprocess(),
+    preprocess: [
+        vitePreprocess(),
+
+        preprocessReact({
+            preprocess: [
+                preprocess({
+                    postcss: true
+                }),
+            ]
+        }),
+
+        markdown(),
+    ],
 
     kit: {
         // adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.

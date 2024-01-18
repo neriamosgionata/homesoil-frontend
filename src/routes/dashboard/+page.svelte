@@ -1,7 +1,7 @@
 <script lang="ts">
     import {actuators, sensors} from "$lib/stores/store";
-    import Sensor from "$lib/Component/Sensor.svelte";
-    import Actuator from "$lib/Component/Actuator.svelte";
+    import Sensor from "$lib/components/Sensor.svelte";
+    import Actuator from "$lib/components/Actuator.svelte";
     import {fade} from "svelte/transition";
 
     $: sensorsArray = Object.values($sensors);
@@ -16,6 +16,10 @@
 </style>
 
 <div class="w-4/5 h-full mx-auto">
+    <p class="my-2">
+        <a href="/dashboard/scripts" class="font-bold text-xl text-blue-400 hover:underline">Go to Scripts</a>
+    </p>
+
     <h1 class="text-2xl font-bold text-[#ff6361]">Sensors</h1>
 
     <div

@@ -1,18 +1,31 @@
-import WebsocketListenEventEnum from "../Enums/WebsocketListenEventEnum";
-import type Sensor from "$lib/Models/Sensor";
+import WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
+import type Sensor from "$lib/models/Sensor";
 import {
     actuators as actuatorStore,
+    dashboard_message,
     last_sensor_reads as lastSensorsReadStore,
+    scripts,
     sensor_reads as sensorReadStore,
     sensor_reads_loading,
     sensors as sensorStore,
 } from "$lib/stores/store";
-import type SensorRead from "$lib/Models/SensorRead";
-import type SensorTypeEnum from "$lib/Enums/SensorTypeEnum";
-import type Actuator from "$lib/Models/Actuator";
+import type SensorRead from "$lib/models/SensorRead";
+import type SensorTypeEnum from "$lib/enums/SensorTypeEnum";
+import type Actuator from "$lib/models/Actuator";
 import {get} from "svelte/store";
+import type Script from "$lib/models/Script";
 
 const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
+    [WebsocketListenEventEnum.MESSAGE_SENT_EVENT]: ({message, type}: {
+        message: string,
+        type: "success" | "error" | "warning" | "info"
+    }) => {
+        dashboard_message.set({
+            message,
+            type,
+        });
+    },
+
     [WebsocketListenEventEnum.ALL_SENSORS_EVENT]: ({sensors}: { sensors: Sensor[] }) => {
         sensorStore.set(
             sensors.reduce((acc, sensor) => {
@@ -243,6 +256,48 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
                 actuators[actuator_id] = actuator;
             }
             return {...actuators};
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_SAVED_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            scripts[script.id] = script;
+            return {...scripts};
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_DELETED_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            delete scripts[script.id];
+            return scripts;
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_MODIFIED_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            scripts[script.id] = script;
+            return {...scripts};
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_STATUS_CHANGE_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            scripts[script.id] = script;
+            return {...scripts};
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_SCHEDULE_ADDED_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            scripts[script.id] = script;
+            return {...scripts};
+        });
+    },
+
+    [WebsocketListenEventEnum.SCRIPT_SCHEDULE_REMOVED_EVENT]: (script: Script) => {
+        scripts.update(scripts => {
+            scripts[script.id] = script;
+            return {...scripts};
         });
     },
 };

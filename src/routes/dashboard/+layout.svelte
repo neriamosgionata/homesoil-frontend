@@ -1,7 +1,8 @@
 <script lang="ts">
-    import {Websocket} from "$lib/Websocket/Websocket";
+    import {Websocket} from "$lib/websocket/Websocket";
     import {onDestroy, onMount, setContext} from "svelte";
     import {writable} from "svelte/store";
+    import DashboardMessage from "$lib/components/DashboardMessage.svelte";
 
     const ws = writable(new Websocket());
 
@@ -15,5 +16,7 @@
         $ws.close();
     });
 </script>
+
+<DashboardMessage/>
 
 <slot/>

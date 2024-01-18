@@ -1,11 +1,11 @@
 <script lang="ts">
-    import type Sensor from "$lib/Models/Sensor";
+    import type Sensor from "$lib/models/Sensor";
     import {last_sensor_reads} from "$lib/stores/store";
-    import Parser from "$lib/Parser/Parser";
+    import Parser from "$lib/parser/Parser";
     import {goto} from "$app/navigation";
     import {getContext} from "svelte";
     import type {Writable} from "svelte/store";
-    import type {Websocket} from "$lib/Websocket/Websocket";
+    import type {Websocket} from "$lib/websocket/Websocket";
 
     export let sensor: Sensor;
 

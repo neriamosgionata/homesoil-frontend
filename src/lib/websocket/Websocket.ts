@@ -1,16 +1,17 @@
 import {io} from 'socket.io-client';
 import type {Socket} from "socket.io";
-import WebsocketListenEventMap from "$lib/Websocket/WebsocketListenEventMap";
-import WebsocketEmitEventMap from "$lib/Websocket/WebsocketEmitEventMap";
-import WebsocketEmitEventEnum from "$lib/Enums/WebsocketEmitEventEnum";
+import WebsocketListenEventMap from "$lib/websocket/WebsocketListenEventMap";
+import WebsocketEmitEventMap from "$lib/websocket/WebsocketEmitEventMap";
+import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
 // @ts-ignore
 import type {EventParams} from "socket.io/dist/typed-events";
-import type WebsocketListenEventEnum from "$lib/Enums/WebsocketListenEventEnum";
+import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
 import moment from "moment";
 import {socket_token} from "$lib/stores/store";
 import {get} from 'svelte/store';
 import {goto} from "$app/navigation";
+import type Script from "$lib/models/Script";
 
 export class Websocket {
     private socket!: Socket<
@@ -97,6 +98,26 @@ export class Websocket {
     }
 
     removeSensor(sensor_id: number) {
-        this.emitEvent(WebsocketEmitEventEnum.REMOVE_SENSOR_EVENT,  {id: sensor_id});
+        this.emitEvent(WebsocketEmitEventEnum.REMOVE_SENSOR_EVENT, {id: sensor_id});
+    }
+
+    addScript(script: Partial<Script>) {
+        this.emitEvent(WebsocketEmitEventEnum.ADD_SCRIPT_EVENT, script);
+    }
+
+    removeScript(script_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.REMOVE_SCRIPT_EVENT, {id: script_id});
+    }
+
+    modifyScript(script: Script) {
+        this.emitEvent(WebsocketEmitEventEnum.MODIFY_SCRIPT_EVENT, script);
+    }
+
+    addScriptSchedule(script: Partial<Script>) {
+        this.emitEvent(WebsocketEmitEventEnum.ADD_SCRIPT_SCHEDULE_EVENT, script);
+    }
+
+    removeScriptSchedule(script_id: number) {
+        this.emitEvent(WebsocketEmitEventEnum.REMOVE_SCRIPT_SCHEDULE_EVENT, {id: script_id});
     }
 }
