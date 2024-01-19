@@ -334,36 +334,46 @@
 <div class="w-100 h-100 container">
 
     {#if toBeSaved}
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <div class="bg-green-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
             <strong class="font-bold">Unsaved code</strong>
             <span class="block sm:inline">You have unsaved code, please save it before leaving this page.</span>
         </div>
     {/if}
 
-    {#if isEditing}
-        <div class="grid grid-cols-5">
 
-            <div class="flex justify-start col-span-4">
-                <div class="w-10 min-h-[100px] p-4">
-                    {#each code.split('\n') as _, i}
-                        <div class={"flex font-medium " + (errors[i] ? " text-red-400" : "" )}>
-                            <span>{i + 1}</span>
-                            {#if errors[i]}
-                                &nbsp;
-                                <span>Error</span>
-                            {/if}
-                        </div>
-                    {/each}
-                </div>
+    <div class="grid grid-cols-5">
+
+        <div class="flex justify-start col-span-4">
+            <div class="w-10 min-h-[100px] p-4">
+                {#each code.split('\n') as _, i}
+                    <div class={"flex font-medium " + (errors[i] ? " text-red-400" : "" )}>
+                        <span>{i + 1}</span>
+                        {#if errors[i]}
+                            &nbsp;
+                            <span>Error</span>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+
+            {#if isEditing}
 
                 <textarea
                         bind:value={code}
                         class="ml-10 w-full bg-white p-4 rounded-xl min-h-[100px] font-mono"
                         bind:this={textAreaRef}
                 />
-            </div>
 
-            <div class="flex justify-end col-span-1 items-center gap-4">
+            {:else}
+
+                <pre class="ml-10 whitespace-pre-wrap font-mono w-full bg-white p-4 rounded-xl">{code || "No code yet! Press edit"}</pre>
+
+            {/if}
+        </div>
+
+        <div class="flex justify-end col-span-1 items-center gap-4">
+            {#if isEditing}
+
                 <button on:click={save}
                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Save
@@ -372,41 +382,22 @@
                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Cancel
                 </button>
-            </div>
-        </div>
 
-    {:else}
+            {:else}
 
-        <div class="grid grid-cols-5">
-
-            <div class="flex justify-start col-span-4">
-                <div id="line-numbers" class="w-10 min-h-[100px] p-4">
-                    {#each code.split('\n') as _, i}
-                        <div class={"flex font-medium " + (errors[i] ? " text-red-400" : "" )}>
-                            <span>{i + 1}</span>
-                            {#if errors[i]}
-                                &nbsp;
-                                <span>Error</span>
-                            {/if}
-                        </div>
-                    {/each}
-                </div>
-
-                <pre class="ml-10 whitespace-pre-wrap font-mono w-full bg-white p-4 rounded-xl">{code || "No code yet! Press edit"}</pre>
-            </div>
-
-            <div class="flex justify-end col-span-1 items-center">
                 <button on:click={edit}
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-[80px] h-[40px]">
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Edit
                 </button>
-            </div>
+
+            {/if}
         </div>
 
-    {/if}
+    </div>
 
     <div class="mt-4">
         {#each Object.values(errors) as error}
+
             <p class="text-red-500">
                 <span class="font-bold">{`LINE ${error.line}: `}</span>
                 &nbsp; {`${error.message}`}
@@ -422,6 +413,7 @@
                     </ul>
                 {/if}
             </p>
+
         {/each}
     </div>
 
