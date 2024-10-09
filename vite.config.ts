@@ -14,10 +14,12 @@ export default defineConfig({
             },
             // Enable esbuild polyfill plugins
             plugins: [
+                //@ts-ignore
                 NodeGlobalsPolyfillPlugin({
                     buffer: true,
                     process: true,
                 }),
+                //@ts-ignore
                 NodeModulesPolyfillPlugin()
             ]
         }
@@ -25,6 +27,7 @@ export default defineConfig({
     build: {
         rollupOptions: {
             plugins: [
+                //@ts-ignore
                 rollupNodePolyFill()
             ]
         }

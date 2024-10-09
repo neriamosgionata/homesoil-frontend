@@ -54,7 +54,7 @@
         $ws.pulseActuator(actuator.id);
     };
 
-    $: isDisabled = !actuator.online || actuator.state;
+    $: isDisabled = !actuator.online;
 
     let newNameInput: HTMLInputElement;
     $: newNameInput?.focus();
