@@ -49,7 +49,7 @@
             <p class="text-gray-700 text-base m-0 p-0">{$dashboard_message.message}</p>
 
             <button class="bg-red-500 text-white font-bold rounded-full py-2 px-4"
-                    on:click={() => closeMessage()}>
+                    onclick={() => closeMessage()}>
                 Close
             </button>
 

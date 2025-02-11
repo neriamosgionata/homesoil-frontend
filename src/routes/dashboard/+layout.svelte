@@ -1,22 +1,29 @@
 <script lang="ts">
-    import {Websocket} from "$lib/websocket/Websocket";
-    import {onDestroy, onMount, setContext} from "svelte";
-    import {writable} from "svelte/store";
-    import DashboardMessage from "$lib/components/DashboardMessage.svelte";
+	import DashboardMessage from "$lib/components/DashboardMessage.svelte";
 
-    const ws = writable(new Websocket());
+	interface Props {
+		children?: import("svelte").Snippet;
+	}
 
-    setContext("ws", ws);
+	let { children }: Props = $props();
 
-    onMount(() => {
-        $ws.connect();
-    });
+	import { Websocket } from "$lib/websocket/Websocket";
+	import { writable } from "svelte/store";
+	import { onDestroy, onMount, setContext } from "svelte";
 
-    onDestroy(() => {
-        $ws.close();
-    });
+	const ws = writable(new Websocket());
+
+	setContext("ws", ws);
+
+	onMount(() => {
+		$ws.connect();
+	});
+
+	onDestroy(() => {
+		$ws.close();
+	});
 </script>
 
-<DashboardMessage/>
+<DashboardMessage />
 
-<slot/>
+{@render children?.()}

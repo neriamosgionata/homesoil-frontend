@@ -3,15 +3,13 @@ import type {Socket} from "socket.io";
 import WebsocketListenEventMap from "$lib/websocket/WebsocketListenEventMap";
 import WebsocketEmitEventMap from "$lib/websocket/WebsocketEmitEventMap";
 import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
-// @ts-ignore
-import type {EventParams} from "socket.io/dist/typed-events";
 import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
 import moment from "moment";
 import {socket_token} from "$lib/stores/store";
 import {get} from 'svelte/store';
-import {goto} from "$app/navigation";
 import type Script from "$lib/models/Script";
+import {goto} from "$app/navigation";
 
 export class Websocket {
     private socket!: Socket<
@@ -20,7 +18,6 @@ export class Websocket {
     >;
 
     connect() {
-        // @ts-ignore
         this.socket = io(
             (location.hostname + ":4000").trim(),
             {
@@ -31,12 +28,16 @@ export class Websocket {
                     token: get(socket_token).token
                 }
             }
-        );
+        ) as unknown as Socket<typeof WebsocketListenEventMap, typeof WebsocketEmitEventMap>;
 
         this.socket.on("disconnect", () => {
             console.log("Disconnected from websocket server");
 
-            goto("/");
+            goto("/")
+                .then(() => {
+                })
+                .catch(() => {
+                });
         });
 
         this.registerEventListeners();
@@ -54,7 +55,7 @@ export class Websocket {
             });
     }
 
-    private emitEvent(event: WebsocketEmitEventEnum, data: EventParams<typeof WebsocketEmitEventMap, WebsocketEmitEventEnum>) {
+    private emitEvent(event: WebsocketEmitEventEnum, data: any) {
         this.socket.emit(event, typeof data === "object" && !(data instanceof Date) ? JSON.stringify(data) : data);
     }
 

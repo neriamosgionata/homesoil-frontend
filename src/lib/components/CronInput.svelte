@@ -1,54 +1,57 @@
 <script lang="ts">
-    import {createEventDispatcher, onMount} from "svelte";
-    import 'react-js-cron/dist/styles.css'
-    import Cron from "react-js-cron";
-    import {used} from "svelte-preprocess-react";
+    import {onMount} from "svelte";
+    import "react-js-cron/dist/styles.css";
+    import Cron from "./ReactJSCron";
+    import {sveltify} from "svelte-preprocess-react";
+    import {type Writable, writable} from "svelte/store";
 
-    export let cron: string | null | undefined = null;
-
-    const dispatcher = createEventDispatcher<{
-        change: {
-            value: string | null | undefined
-        }
-    }>();
-
-    const emitChange = (v: string | null | undefined) => {
-        dispatcher("change", {
-            value: v
-        });
+    interface Props {
+        c: string,
+        change: (v: { value: string }) => void;
     }
 
-    const catchEvent = (v: string | null | undefined) => {
-        cron = v;
+    let {change, c}: Props = $props();
+
+    const cron: Writable<string> = writable("");
+
+    const emitChange = (v: string) => {
+        change({value: v});
+    };
+
+    const catchEvent = (v: string) => {
+        cron.set(v);
         emitChange(v);
-    }
+    };
 
     onMount(() => {
-        catchEvent(undefined);
-    })
+        cron.set(c);
+        catchEvent("");
+    });
 
-    used(Cron);
-
+    const react = sveltify({Cron});
 </script>
 
-<react:Cron
-        value={cron}
+{#if $cron}
+    <div class="flex justify-between text-md dark:text-white text-black/70 mb-2">
+        <div>
+            <span class="">Scheduled for: <i>{$cron}</i> </span>
+        </div>
+        <div>
+            <a class="pointer text-xs" target="_blank" href={`https://crontab.guru/#${$cron}`}>Show on crontab.guru</a>
+        </div>
+    </div>
+{:else}
+    <div class="flex justify-between text-md mb-2 text-red-400">
+        <div>
+            <span class="">No schedule set</span>
+        </div>
+    </div>
+{/if}
+
+<react.Cron
+        value={$cron === undefined ? "* * * * *" : $cron}
         setValue={catchEvent}
         clearButtonAction="empty"
         clearButton={true}
         clearButtonProps={{}}
-        className="text-black/70 font-light"
-        id="cronInput"
-/>
-
-{#if cron}
-    <div class="flex justify-between text-md dark:text-white text-black/70 mt-2">
-        <div>
-            <span class="">Scheduled for: <i>{cron}</i> </span>
-        </div>
-        <div>
-            <a class="pointer text-xs" target='_blank'
-               href={`https://crontab.guru/#${cron}`}>Show on crontab.guru</a>
-        </div>
-    </div>
-{/if}
+></react.Cron>

@@ -1,24 +1,46 @@
 <script lang="ts">
-    import {createEventDispatcher, onDestroy, onMount} from "svelte";
+    import {onDestroy, onMount} from "svelte";
+    import type {
+        NumberOfArgs,
+        TypeOfArgs,
+        TypeOfSymbol,
+    } from "$lib/components/ScriptLanguage";
 
-    let dispatcher = createEventDispatcher<{
-        save: { code: string },
-        editing: { isEditing: boolean }
-    }>();
+    import {
+        FunctionSymbol,
+        InstructionSymbol,
+        InstructionBlockSymbol,
+        MainInstructionBlockSymbol,
+        StringArgType,
+        NumberArgType,
+        BooleanArgType,
+        VariableArgType,
+        AnyArgType
+    } from "$lib/components/ScriptLanguage";
 
-    export let code: string;
+    interface Props {
+        code: string;
+        editing?: (v: { isEditing: boolean }) => void,
+        save?: (v: { code: string }) => void,
+    }
 
-    let isEditing = false;
-    let toBeSaved = false;
-    let textAreaRef: HTMLTextAreaElement;
+    let {
+        code,
+        editing,
+        save,
+    }: Props = $props();
+
+    let isEditing = $state(false);
+    let toBeSaved = $state(false);
+    let textAreaRef: HTMLTextAreaElement | undefined = $state(undefined);
 
     const edit = () => {
         isEditing = true;
         toBeSaved = true;
-        dispatcher('editing', {isEditing});
+        editing?.({isEditing});
     };
 
-    const save = () => {
+    const saveInternal = () => {
         isEditing = false;
 
         if (Object.keys(errors).length > 0) {
@@ -26,90 +48,88 @@
         }
 
         toBeSaved = false;
-        dispatcher('save', {code});
-        dispatcher('editing', {isEditing});
+        save?.({code});
+        editing?.({isEditing});
     };
 
     const cancel = () => {
         isEditing = false;
-        dispatcher('editing', {isEditing});
+        editing?.({isEditing});
     };
 
-    type TypeOfSymbol = "function" | "instruction" | "instruction_block" | "keyword" | "main_instruction";
-    type NumberOfArgs = number;
-    type TypeOfArgs = "string" | "number" | "boolean" | "variable" | "any";
-
     const language: { [p: string]: [TypeOfSymbol, NumberOfArgs, (TypeOfArgs[] | TypeOfArgs)[]] } = {
-        "ACTIVATE": ["function", 1, [["number", "variable"]]],
-        "DEACTIVATE": ["function", 1, [["number", "variable"]]],
-        "PULSE": ["function", 1, [["number", "variable"]]],
-        "READ": ["function", 1, [["number", "variable"]]],
+        "ACTIVATE": [FunctionSymbol, 1, [[NumberArgType, VariableArgType]]],
+        "DEACTIVATE": [FunctionSymbol, 1, [[NumberArgType, VariableArgType]]],
+        "PULSE": [FunctionSymbol, 1, [[NumberArgType, VariableArgType]]],
+        "READ": [FunctionSymbol, 1, [[NumberArgType, VariableArgType]]],
 
-        "SEND_TO_DASHBOARD": ["function", 1, [["number", "variable", "string"]]],
+        "SEND_TO_DASHBOARD": [FunctionSymbol, 1, [[NumberArgType, VariableArgType, StringArgType]]],
 
-        "SET": ["function", 2, [["string", "number"], "any"]],
-        "UNSET": ["function", 1, [["string", "number"]]],
+        "SET": [FunctionSymbol, 2, [[StringArgType, NumberArgType], AnyArgType]],
+        "UNSET": [FunctionSymbol, 1, [[StringArgType, NumberArgType]]],
 
-        "ADD": ["function", 2, [["number", "variable"], ["number", "variable"]]],
-        "SUBTRACT": ["function", 2, [["number", "variable"], ["number", "variable"]]],
-        "MULTIPLY": ["function", 2, [["number", "variable"], ["number", "variable"]]],
-        "DIVIDE": ["function", 2, [["number", "variable"], ["number", "variable"]]],
-        "MODULO": ["function", 2, [["number", "variable"], ["number", "variable"]]],
+        "ADD": [FunctionSymbol, 2, [[NumberArgType, VariableArgType], [NumberArgType, VariableArgType]]],
+        "SUBTRACT": [FunctionSymbol, 2, [[NumberArgType, VariableArgType], [NumberArgType, VariableArgType]]],
+        "MULTIPLY": [FunctionSymbol, 2, [[NumberArgType, VariableArgType], [NumberArgType, VariableArgType]]],
+        "DIVIDE": [FunctionSymbol, 2, [[NumberArgType, VariableArgType], [NumberArgType, VariableArgType]]],
+        "MODULO": [FunctionSymbol, 2, [[NumberArgType, VariableArgType], [NumberArgType, VariableArgType]]],
 
-        "DELAY": ["function", 1, ["number"]],
+        "DELAY": [FunctionSymbol, 1, [NumberArgType]],
 
-        "IF": ["instruction", 1, ["any"]],
-        "WHILE": ["instruction", 1, ["any"]],
-        "LOOP": ["instruction", 0, []],
-        "BREAK": ["instruction", 0, []],
-        "CONTINUE": ["instruction", 0, []],
+        "IF": [InstructionSymbol, 1, [AnyArgType]],
+        "WHILE": [InstructionSymbol, 1, [AnyArgType]],
+        "LOOP": [InstructionSymbol, 0, []],
+        "BREAK": [InstructionSymbol, 0, []],
+        "CONTINUE": [InstructionSymbol, 0, []],
 
-        "THEN": ["instruction_block", 0, []],
-        "END": ["instruction_block", 0, []],
+        "THEN": [InstructionBlockSymbol, 0, []],
+        "END": [InstructionBlockSymbol, 0, []],
 
-        "RUN": ["main_instruction", 0, []],
-        "STOP": ["main_instruction", 0, []],
+        "RUN": [MainInstructionBlockSymbol, 0, []],
+        "STOP": [MainInstructionBlockSymbol, 0, []],
     };
 
     const parseArgumentType = (arg: string): TypeOfArgs => {
         if (arg === "true" || arg === "false") {
-            return "boolean";
+            return BooleanArgType;
         }
 
         if (arg.startsWith('"') || arg.endsWith('"')) {
-            return "string";
+            return StringArgType;
         }
 
         if (arg.includes("$")) {
-            return "variable";
+            return VariableArgType;
         }
 
         if (arg.includes(".") || arg.match(/^[0-9]+$/)) {
-            return "number";
+            return NumberArgType;
         }
 
-        return "any";
+        return AnyArgType;
     };
 
-    const checkArgumentsConformity = (command: string, args: string[], expectedArgs: (TypeOfArgs[] | TypeOfArgs)[]): {
-        [p: number]: { arg: number, message: string }
-    } => {
+    const checkArgumentsConformity = (
+        command: string,
+        args: string[],
+        expectedArgs: (TypeOfArgs[] | TypeOfArgs)[],
+    ): { [p: number]: { arg: number, message: string } } => {
         let errors: { [p: number]: { arg: number, message: string } } = {};
 
         for (let i = 0; i < args.length; i++) {
             let arg = args[i];
 
             let expectedArg = expectedArgs[i];
-            if (typeof expectedArg === "string") {
-                expectedArg = [expectedArg];
+            if (typeof expectedArg === StringArgType) {
+                expectedArg = [expectedArg as TypeOfArgs];
             }
 
-            if (expectedArg.includes("any")) {
+            if (expectedArg.includes(AnyArgType)) {
                 continue;
             }
 
             let type = parseArgumentType(arg);
-            if (type === "any") {
+            if (type === AnyArgType) {
                 errors[i] = {
                     arg: i + 1,
                     message: `Argument ${i + 1} of command ${command} is an unknown type (string, number, boolean, variable are supported)`
@@ -117,7 +137,7 @@
                 continue;
             }
 
-            if (!arg.match(/^"(.)+"$/ig) && arg.includes("\"") && expectedArg.includes("string")) {
+            if (!arg.match(/^"(.)+"$/ig) && arg.includes("\"") && expectedArg.includes(StringArgType)) {
                 errors[i] = {
                     arg: i + 1,
                     message: `Argument ${i + 1} of command ${command} is an invalid string`
@@ -131,7 +151,7 @@
 
             errors[i] = {
                 arg: i + 1,
-                message: `Argument ${i + 1} of command ${command} expects ${expectedArg.join(" or ")}, ${type} given`
+                message: `Argument ${i + 1} of command ${command} expects ${(expectedArg as TypeOfArgs[]).join(" or ")}, ${type} given`
             };
         }
 
@@ -187,7 +207,7 @@
                 }
 
                 let commandType = commandConfig[0];
-                if (commandType === "main_instruction") {
+                if (commandType === MainInstructionBlockSymbol) {
                     continue;
                 }
 
@@ -222,7 +242,7 @@
                 let currentArgs = lineComposition.slice(1);
                 let expectedNumberOfArgs = commandConfig[1];
 
-                if (commandType === "instruction") {
+                if (commandType === InstructionSymbol) {
 
                     if (currentArgs.includes("THEN")) {
                         currentArgs.slice(currentArgs.indexOf("THEN"), 1);
@@ -251,7 +271,7 @@
                     continue;
                 }
 
-                if (commandType === "function") {
+                if (commandType === FunctionSymbol) {
 
                     if (currentArgs.length < expectedNumberOfArgs) {
                         errors[i] = {
@@ -298,21 +318,13 @@
     ;
 
     const callbackKeydown = (e: any) => {
-        if (e.key == 'Tab') {
-            e.preventDefault();
+        if (e.key == 'Tab' && textAreaRef) {
             let start = textAreaRef.selectionStart;
             let end = textAreaRef.selectionEnd;
-            textAreaRef.value = textAreaRef.value.substring(0, start) +
-                "\t" + textAreaRef.value.substring(end);
-            textAreaRef.selectionStart =
-                textAreaRef.selectionEnd = start + 1;
+            textAreaRef.value = textAreaRef.value.substring(0, start) + "\t" + textAreaRef.value.substring(end);
+            textAreaRef.selectionStart = textAreaRef.selectionEnd = start + 1;
         }
     };
-
-    $:if (textAreaRef) {
-        textAreaRef.removeEventListener('keydown', callbackKeydown);
-        textAreaRef.addEventListener('keydown', callbackKeydown);
-    }
 
     onMount(() => {
         if (textAreaRef) {
@@ -328,21 +340,19 @@
         }
     });
 
-    $:  errors = checkCodeConformity(code);
+    let errors = $derived(checkCodeConformity(code));
 </script>
 
-<div class="w-100 h-100 container">
+<div class="container">
 
     {#if toBeSaved}
         <div class="bg-green-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
             <strong class="font-bold">Unsaved code</strong>
-            <span class="block sm:inline">You have unsaved code, please save it before leaving this page.</span>
+            <span class="block sm:inline">You have unsaved code!</span>
         </div>
     {/if}
 
-
     <div class="grid grid-cols-5">
-
         <div class="flex justify-start col-span-4">
             <div class="w-10 min-h-[100px] p-4">
                 {#each code.split('\n') as _, i}
@@ -362,7 +372,7 @@
                         bind:value={code}
                         class="ml-10 w-full bg-white p-4 rounded-xl min-h-[100px] font-mono"
                         bind:this={textAreaRef}
-                />
+                ></textarea>
 
             {:else}
 
@@ -374,18 +384,18 @@
         <div class="flex justify-end col-span-1 items-center gap-4">
             {#if isEditing}
 
-                <button on:click={save}
+                <button onclick={saveInternal}
                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Save
                 </button>
-                <button on:click={cancel}
+                <button onclick={cancel}
                         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Cancel
                 </button>
 
             {:else}
 
-                <button on:click={edit}
+                <button onclick={edit}
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-[40px]">
                     Edit
                 </button>
@@ -401,18 +411,18 @@
             <p class="text-red-500">
                 <span class="font-bold">{`LINE ${error.line}: `}</span>
                 &nbsp; {`${error.message}`}
-
-                {#if error.sub_errors}
-                    <ul class="list-disc ml-4">
-                        {#each Object.values(error.sub_errors) as sub_error}
-                            <li>
-                                <span class="font-bold">{`ARGUMENT ${sub_error.arg}: `}</span>
-                                &nbsp; {`${sub_error.message}`}
-                            </li>
-                        {/each}
-                    </ul>
-                {/if}
             </p>
+
+            {#if error.sub_errors}
+                <ul class="list-disc ml-4">
+                    {#each Object.values(error.sub_errors) as sub_error}
+                        <li>
+                            <span class="font-bold">{`ARGUMENT ${sub_error.arg}: `}</span>
+                            &nbsp; {`${sub_error.message}`}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
 
         {/each}
     </div>

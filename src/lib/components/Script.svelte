@@ -5,12 +5,16 @@
     import type {Websocket} from "$lib/websocket/Websocket";
     import type Script from "$lib/models/Script";
 
-    export let script: Script;
+    interface Props {
+        script: Script;
+    }
+
+    let {script}: Props = $props();
 
     const ws: Writable<Websocket> = getContext("ws");
 
-    let isRenaming = false;
-    let newName = "";
+    let isRenaming = $state(false);
+    let newName = $state("");
 
     const renameScript = (e: MouseEvent) => {
         e.preventDefault();
@@ -54,8 +58,10 @@
         goto(`/dashboard/scripts/${script.id}`);
     };
 
-    let newNameInput: HTMLInputElement;
-    $: newNameInput?.focus();
+    let newNameInput: HTMLInputElement | undefined = $state(undefined);
+    $effect(() => {
+        newNameInput && newNameInput.focus();
+    });
 </script>
 
 <div class="flex flex-col p-1 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
@@ -64,7 +70,7 @@
         {#if !isRenaming}
             <div class="flex flex-col justify-center items-center py-2">
                 <button
-                        on:click={(e) => goToDetails(e)}
+                        onclick={(e) => goToDetails(e)}
                 >
                     <p class="text-sm text-center text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center items-center">
                         <span class="hover:underline hover:cursor-pointer block mr-3">
@@ -81,8 +87,8 @@
                          viewBox="0 0 16 16"
                          role="button"
                          tabindex="0"
-                         on:click={(e) => renameScript(e)}
-                         on:keydown={() => {}}
+                         onclick={(e) => renameScript(e)}
+                         onkeydown={() => {}}
                     >
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                     </svg>
@@ -95,8 +101,8 @@
                             viewBox="0 0 16 16"
                             role="button"
                             tabindex="0"
-                            on:click={(e) => removeScript(e)}
-                            on:keydown={() => {}}
+                            onclick={(e) => removeScript(e)}
+                            onkeydown={() => {}}
                     >
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                         <path fill-rule="evenodd"
@@ -109,11 +115,11 @@
             <div class="flex flex-row justify-center items-center py-2 text-gray-700">
                 <input
                         type="text"
-                        class="w-10/12 p-2 text-sm border border-gray-300 rounded mx-auto"
+                        class="w-10/12 p-2 text-sm border border-gray-300 rounded mx-auto bg-white"
                         tabindex="0"
                         bind:this={newNameInput}
                         bind:value={newName}
-                        on:keydown={(e) => handleKeyDown(e)}
+                        onkeydown={(e) => handleKeyDown(e)}
                 />
                 <svg
                         width="15"
@@ -121,8 +127,8 @@
                         viewBox="0 0 15 15"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        on:click={() => handleRenamingCancel()}
-                        on:keydown={() => {}}
+                        onclick={() => handleRenamingCancel()}
+                        onkeydown={() => {}}
                         role="button"
                         tabindex="0"
                 >
