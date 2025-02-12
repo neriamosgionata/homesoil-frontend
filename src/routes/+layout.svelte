@@ -8,8 +8,8 @@
 	let { children }: Props = $props();
 </script>
 
-<div class="w-full h-full flex flex-col bg-[#003f5c]">
+<main class="w-full h-full flex flex-col bg-[#003f5c]">
 	<div class="p-8">
 		{@render children?.()}
 	</div>
-</div>
+</main>

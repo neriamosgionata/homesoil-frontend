@@ -54,7 +54,7 @@
 	});
 </script>
 
-<div class="container">
+<div>
 	<div class="bg-gray-100 rounded-lg shadow-xl py-2">
 		<button class="m-4 text-white font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-700">
 			<a href="/dashboard">Back</a>

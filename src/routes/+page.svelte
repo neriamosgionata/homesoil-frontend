@@ -14,8 +14,8 @@
 	};
 </script>
 
-<div class="   ">
-	<form class="bg-blue text-center w-1/3 px-3 py-4 text-white mx-auto rounded">
+<div>
+	<form class="bg-blue text-center w-1/3 px-3 py-4 text-white rounded mx-auto">
 		<input
 			type="password"
 			placeholder="Token"

@@ -7,7 +7,11 @@
 	let scriptsArray = $derived(Object.values($scripts));
 </script>
 
-<div class="w-4/5 h-full mx-auto">
+<div class="w-4/5">
+	<p class="my-4">
+		<a href="/dashboard" class="font-bold text-xl text-blue-400 hover:underline">Dashboard</a>
+	</p>
+
 	<h1 class="text-2xl font-bold text-[#ff6361]">Scripts</h1>
 
 	<div

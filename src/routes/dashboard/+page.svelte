@@ -8,7 +8,7 @@
 	let actuatorsArray = $derived(Object.values($actuators));
 </script>
 
-<div class="w-4/5 h-full mx-auto">
+<div class="w-4/5">
 	<p class="my-4">
 		<a href="/dashboard/scripts" class="font-bold text-xl text-blue-400 hover:underline">Scripts</a>
 	</p>
