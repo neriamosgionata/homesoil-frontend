@@ -3,7 +3,6 @@
 	import { fade } from "svelte/transition";
 	import { goto } from "$app/navigation";
 	import ScriptComponent from "$lib/components/Script.svelte";
-
 	let scriptsArray = $derived(Object.values($scripts));
 </script>
 

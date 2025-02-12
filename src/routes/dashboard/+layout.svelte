@@ -17,6 +17,7 @@
 
 	onMount(() => {
 		$ws.connect();
+		$ws.getAllScripts();
 	});
 
 	onDestroy(() => {
