@@ -15,7 +15,7 @@
 		code: "",
 		schedule: "",
 		status: 0,
-		created_at: new Date().toISOString(),
+		created_at: new Date().toISOString().replaceAll("Z", ""),
 		updated_at: null
 	} as Partial<Script>);
 
