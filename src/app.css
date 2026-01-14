@@ -11,6 +11,20 @@ body * {
 }
 
 :root {
+    /* Dark theme palette */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-card: #1e293b;
+    --border-subtle: #334155;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --status-online: #22c55e;
+    --status-offline: #ef4444;
+
+    /* Legacy cyan palette */
     --cyan-100: 183 90% 90%;
     --cyan-200: 183 90% 80%;
     --cyan-300: 183 90% 70%;
@@ -20,6 +34,23 @@ body * {
     --cyan-700: 183 90% 30%;
     --cyan-800: 183 90% 20%;
     --cyan-900: 183 90% 10%;
+}
+
+/* Glass effect utility */
+.glass {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+/* Card hover effect */
+.card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.3), 0 0 10px -5px var(--accent);
 }
 
 ::-webkit-scrollbar-track {

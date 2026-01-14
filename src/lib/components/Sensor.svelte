@@ -22,17 +22,13 @@
 
     const renameSensor = (e: MouseEvent) => {
         e.preventDefault();
-        if (!(e.target instanceof SVGElement)) {
-            return;
-        }
+        e.stopPropagation();
         isRenaming = true;
     };
 
     const removeSensor = (e: MouseEvent) => {
         e.preventDefault();
-        if (!(e.target instanceof SVGElement)) {
-            return;
-        }
+        e.stopPropagation();
         if (confirm("Are you sure you want to remove this sensor?")) {
             $ws.removeSensor(sensor.id);
         }
@@ -55,8 +51,7 @@
         }
     };
 
-    const goToDetails = (e: MouseEvent) => {
-        e.preventDefault();
+    const goToDetails = () => {
         goto(`/dashboard/sensors/${sensor.id}`);
     };
 
@@ -66,108 +61,93 @@
     });
 </script>
 
-<div class="flex flex-col p-1 bg-white border border-gray-300 rounded-xl m-2 z-10 shadow-xl">
+<div
+    class="glass card-hover flex flex-col rounded-xl cursor-pointer group"
+    onclick={goToDetails}
+    onkeydown={(e) => e.key === 'Enter' && goToDetails()}
+    role="button"
+    tabindex="0"
+>
+    <!-- Header with status indicator -->
+    <div class="flex items-center justify-between p-4 border-b" style="border-color: var(--border-subtle);">
+        <div class="flex items-center gap-2">
+            <div
+                class="w-2.5 h-2.5 rounded-full {sensor.online ? 'animate-pulse' : ''}"
+                style="background-color: {sensor.online ? 'var(--status-online)' : 'var(--text-muted)'}; box-shadow: {sensor.online ? '0 0 8px var(--status-online)' : 'none'};"
+            ></div>
+            <span class="text-xs font-medium" style="color: {sensor.online ? 'var(--status-online)' : 'var(--text-muted)'};">
+                {sensor.online ? "Online" : "Offline"}
+            </span>
+        </div>
+        <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button
+                onclick={renameSensor}
+                class="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                style="color: var(--text-secondary);"
+                aria-label="Rename sensor"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                    <path d="m15 5 4 4"/>
+                </svg>
+            </button>
+            <button
+                onclick={removeSensor}
+                class="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors"
+                style="color: var(--status-offline);"
+                aria-label="Delete sensor"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
 
-    <div class="flex flex-col justify-center pb-2 px-2">
+    <!-- Content -->
+    <div class="p-4 flex-1 flex flex-col">
         {#if !isRenaming}
-            <div class="flex flex-col justify-center items-center py-2">
-                <button
-                        onclick={(e) => goToDetails(e)}
-                >
-                    <p class="text-sm text-center text-gray-500 font-bold hover:text-blue-500 flex flex-row justify-center items-center">
-                        <span class="hover:underline hover:cursor-pointer block mr-3">
-                            {sensor.name}
-                        </span>
-                    </p>
-                </button>
-                <p class="text-xs text-center text-gray-500 hover:text-blue-500 flex flex-row justify-center items-center">
-                    <span class="hover:underline hover:cursor-pointer block mr-3">
-                        {sensor.ip_address}
-                    </span>
+            <div class="mb-3">
+                <h3 class="font-semibold text-base truncate" style="color: var(--text-primary);">
+                    {sensor.name}
+                </h3>
+                <p class="text-xs mt-1 truncate" style="color: var(--text-muted);">
+                    {sensor.ip_address}
                 </p>
-                <div class="grid grid-cols-2 gap-2 text-sm text-center text-gray-500 font-bold mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="16"
-                         height="16"
-                         fill="currentColor"
-                         class="bi bi-pencil"
-                         viewBox="0 0 16 16"
-                         role="button"
-                         tabindex="0"
-                         onclick={(e) => renameSensor(e)}
-                         onkeydown={() => {}}
-                    >
-                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                    </svg>
-                    <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-trash"
-                            viewBox="0 0 16 16"
-                            role="button"
-                            tabindex="0"
-                            onclick={(e) => removeSensor(e)}
-                            onkeydown={() => {}}
-                    >
-                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                        <path fill-rule="evenodd"
-                              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-
-                </div>
             </div>
         {:else}
-            <div class="flex flex-row justify-center items-center py-2 text-gray-700">
-                <input
+            <div class="mb-3" onclick={(e) => e.stopPropagation()}>
+                <div class="flex items-center gap-2">
+                    <input
                         type="text"
-                        class="w-10/12 p-2 text-sm border border-gray-300 rounded mx-auto bg-white"
-                        tabindex="0"
+                        class="flex-1 px-3 py-2 text-sm rounded-lg border focus:outline-none focus:ring-2"
+                        style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
+                        placeholder={sensor.name}
                         bind:this={newNameInput}
                         bind:value={newName}
-                        onkeydown={(e) => handleKeyDown(e)}
-                />
-                <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        onclick={() => handleRenamingCancel()}
-                        onkeydown={() => {}}
-                        role="button"
-                        tabindex="0"
-                >
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
-                          fill="currentColor"/>
-                </svg>
+                        onkeydown={handleKeyDown}
+                    />
+                    <button
+                        onclick={handleRenamingCancel}
+                        class="p-2 rounded-lg hover:bg-white/10"
+                        style="color: var(--text-secondary);"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 6 6 18"/>
+                            <path d="m6 6 12 12"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         {/if}
+
+        <!-- Value display -->
+        <div class="mt-auto pt-3 border-t" style="border-color: var(--border-subtle);">
+            <p class="text-2xl font-bold text-center" style="color: var(--accent);">
+                {parsedValue}
+            </p>
+        </div>
     </div>
-
-    <div class="rounded-xl flex flex-row justify-center items-center py-2   h-6 bg-white">
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="16"
-             height="16"
-             fill="currentColor"
-             class="{'bi bi-circle-fill ' + (sensor.online ? 'text-green-400' : 'text-gray-300')}"
-             viewBox="0 0 16 16"
-        >
-            <circle cx="8" cy="8" r="8"/>
-        </svg>
-        <p class={'text-xs font-bold ml-2 ' + (sensor.online ? 'text-green-400' : 'text-gray-300')}>
-            {sensor.online ? "Online" : "Offline"}
-        </p>
-    </div>
-
-    <hr class="border-gray-300 mt-1"/>
-
-    <div class="flex flex-row justify-center py-2 mt-2">
-        <p class="text-xl font-semibold text-center text-gray-800">
-            {parsedValue}
-        </p>
-    </div>
-
 </div>

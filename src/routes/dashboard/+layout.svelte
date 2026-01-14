@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DashboardMessage from "$lib/components/DashboardMessage.svelte";
+	import Sidebar from "$lib/components/Sidebar.svelte";
 
 	interface Props {
 		children?: import("svelte").Snippet;
@@ -27,6 +28,9 @@
 
 <DashboardMessage />
 
-<div class="container mx-auto">
-	{@render children?.()}
+<div class="flex h-full">
+	<Sidebar />
+	<div class="flex-1 overflow-auto p-8">
+		{@render children?.()}
+	</div>
 </div>

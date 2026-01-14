@@ -5,18 +5,18 @@ import { sveltePreprocess } from "svelte-preprocess";
 
 /** @type {import("@sveltejs/kit").Config} */
 const config = {
-  // Consult https://kit.svelte.dev/docs/integrations#preprocessors
-  // for more information about preprocessors
-  preprocess: [
-    sveltePreprocess({
-      postcss: true
-    }),
-    preprocessReact()
-  ],
+    // Consult https://kit.svelte.dev/docs/integrations#preprocessors
+    // for more information about preprocessors
+    preprocess: [
+        sveltePreprocess({
+            postcss: true
+        }),
+        preprocessReact()
+    ],
 
-  kit: {
-    adapter: adapter()
-  },
+    kit: {
+        adapter: adapter()
+    },
 };
 
 export default config;
