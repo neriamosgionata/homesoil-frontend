@@ -6,7 +6,7 @@ import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
 import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
 import moment from "moment";
-import { socket_token } from "$lib/stores/store";
+import { socket_token, server_config } from "$lib/stores/store";
 import { get } from 'svelte/store';
 import type Script from "$lib/models/Script";
 import { goto } from "$app/navigation";
@@ -18,8 +18,13 @@ export class Websocket {
   >;
 
   connect() {
+    const config = get(server_config);
+    const host = config.host || location.hostname;
+    const port = config.port || 4000;
+    const serverUrl = `${host}:${port}`;
+
     this.socket = io(
-      (location.hostname + ":4000").trim(),
+      serverUrl.trim(),
       {
         transports: ["websocket", "polling"],
         upgrade: true,
