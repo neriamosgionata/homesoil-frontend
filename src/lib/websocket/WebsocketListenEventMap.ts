@@ -131,9 +131,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     sensorStore.update(sensors => {
       const sensor = sensors[sensor_id];
       if (sensor) {
-        sensor.name = sensor_name;
-        sensor.updated_at = updated_at;
-        sensors[sensor_id] = sensor;
+        sensors[sensor_id] = { ...sensor, name: sensor_name, updated_at };
       }
       return { ...sensors };
     });
@@ -147,9 +145,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     sensorStore.update(sensors => {
       const sensor = sensors[sensor_id];
       if (sensor) {
-        sensor.online = online;
-        sensor.updated_at = updated_at;
-        sensors[sensor_id] = sensor;
+        sensors[sensor_id] = { ...sensor, online, updated_at };
       }
       return { ...sensors };
     });
@@ -220,9 +216,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     actuatorStore.update(actuators => {
       const actuator = actuators[actuator_id];
       if (actuator) {
-        actuator.name = actuator_name;
-        actuator.updated_at = updated_at;
-        actuators[actuator_id] = actuator;
+        actuators[actuator_id] = { ...actuator, name: actuator_name, updated_at };
       }
       return { ...actuators };
     });
@@ -236,9 +230,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     actuatorStore.update(actuators => {
       const actuator = actuators[actuator_id];
       if (actuator) {
-        actuator.state = actuator_state;
-        actuator.updated_at = updated_at;
-        actuators[actuator_id] = actuator;
+        actuators[actuator_id] = { ...actuator, state: actuator_state, updated_at };
       }
       return { ...actuators };
     });
@@ -252,9 +244,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     actuatorStore.update(actuators => {
       const actuator = actuators[actuator_id];
       if (actuator) {
-        actuator.online = online;
-        actuator.updated_at = updated_at;
-        actuators[actuator_id] = actuator;
+        actuators[actuator_id] = { ...actuator, online, updated_at };
       }
       return { ...actuators };
     });
