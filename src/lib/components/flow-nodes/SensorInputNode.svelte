@@ -92,13 +92,13 @@
 	}
 	.node-delete-btn:hover {
 		opacity: 1;
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
+		color: #F44336;
+		background: rgba(244, 67, 54, 0.15);
 	}
 	.sensor-node .node-header {
-		background: rgba(34, 197, 94, 0.15);
+		background: rgba(76, 175, 80, 0.15);
 		border-radius: 11px 11px 0 0;
-		color: #22c55e;
+		color: #4CAF50;
 	}
 	.node-body {
 		padding: 8px 12px;
@@ -136,17 +136,17 @@
 		border-radius: 4px;
 	}
 	.live-status.online {
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.15);
+		color: #4CAF50;
+		background: rgba(76, 175, 80, 0.15);
 	}
 	.live-status.offline {
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
+		color: #F44336;
+		background: rgba(244, 67, 54, 0.15);
 	}
 	.live-value {
 		font-size: 16px;
 		font-weight: 700;
-		color: #22c55e;
+		color: #4CAF50;
 		margin-top: 2px;
 		font-variant-numeric: tabular-nums;
 	}

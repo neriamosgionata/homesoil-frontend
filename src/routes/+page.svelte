@@ -18,21 +18,26 @@
 	};
 </script>
 
-<div>
-	<form class="bg-blue text-center w-1/3 px-3 py-4 text-white rounded mx-auto">
-		<h2 class="text-xl font-bold mb-4">Homesoil</h2>
+<div class="min-h-screen flex items-center justify-center" style="background-color: var(--bg-primary);">
+	<form class="glass rounded-xl p-8 w-full max-w-sm" onsubmit={(e) => { e.preventDefault(); login(); }}>
+		<div class="text-center mb-6">
+			<h2 class="text-2xl font-bold" style="color: var(--text-primary);">HomeSoil</h2>
+			<p class="text-sm mt-1" style="color: var(--text-muted);">Sign in to your dashboard</p>
+		</div>
 
-		<div class="flex gap-2 my-3">
+		<div class="flex gap-2 mb-4">
 			<input
 				type="text"
-				placeholder="Server IP (e.g. 192.168.1.100)"
-				class="block flex-1 text-sm py-2 px-3 rounded text-gray-700 bg-white"
+				placeholder="Server IP"
+				class="flex-1 text-sm py-2.5 px-3 rounded-lg border focus:outline-none focus:ring-2"
+				style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
 				bind:value={serverHost}
 			/>
 			<input
 				type="number"
 				placeholder="Port"
-				class="block w-24 text-sm py-2 px-3 rounded text-gray-700 bg-white"
+				class="w-24 text-sm py-2.5 px-3 rounded-lg border focus:outline-none focus:ring-2"
+				style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
 				bind:value={serverPort}
 			/>
 		</div>
@@ -40,12 +45,14 @@
 		<input
 			type="password"
 			placeholder="Token"
-			class="block w-full mx-auto text-sm py-2 px-3 rounded my-3 text-gray-700 bg-white"
+			class="block w-full text-sm py-2.5 px-3 rounded-lg border focus:outline-none focus:ring-2 mb-5"
+			style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
 			bind:value={token}
 		/>
 		<button
-			class="text-white font-bold py-2 px-4 rounded border block mx-auto w-full bg-blue-500 hover:bg-blue-700"
-			onclick={() => login()}
+			type="submit"
+			class="w-full py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200"
+			style="background-color: var(--accent); color: white;"
 		>
 			Login
 		</button>

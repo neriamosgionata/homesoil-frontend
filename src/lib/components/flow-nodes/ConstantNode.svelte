@@ -69,13 +69,13 @@
 	}
 	.node-delete-btn:hover {
 		opacity: 1;
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
+		color: #F44336;
+		background: rgba(244, 67, 54, 0.15);
 	}
 	.constant-node .node-header {
-		background: rgba(59, 130, 246, 0.15);
+		background: rgba(33, 150, 243, 0.15);
 		border-radius: 11px 11px 0 0;
-		color: #3b82f6;
+		color: #2196F3;
 	}
 	.node-body {
 		padding: 8px 12px;

@@ -30,6 +30,12 @@
 		}
 	};
 
+	const runScript = (e: MouseEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		$ws.runScript(script.id);
+	};
+
 	const handleRenaming = () => {
 		let s = { ...script };
 		s.title = newName;
@@ -88,6 +94,16 @@
 			</span>
 		</div>
 		<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+			<button
+				onclick={runScript}
+				class="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+				style="color: var(--accent);"
+				aria-label="Run script"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="5 3 19 12 5 21 5 3"/>
+				</svg>
+			</button>
 			<button
 				onclick={renameScript}
 				class="p-1.5 rounded-lg hover:bg-white/10 transition-colors"

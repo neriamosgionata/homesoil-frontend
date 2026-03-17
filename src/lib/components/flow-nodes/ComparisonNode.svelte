@@ -79,13 +79,13 @@
 	}
 	.node-delete-btn:hover {
 		opacity: 1;
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
+		color: #F44336;
+		background: rgba(244, 67, 54, 0.15);
 	}
 	.comparison-node .node-header {
-		background: rgba(168, 85, 247, 0.15);
+		background: rgba(156, 39, 176, 0.15);
 		border-radius: 11px 11px 0 0;
-		color: #a855f7;
+		color: #9C27B0;
 	}
 	.node-body {
 		padding: 24px 32px 28px;

@@ -84,5 +84,7 @@
     "vite": "8.0.0",
     "vitest": "4.1.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.1"
+  }
 }

@@ -44,11 +44,11 @@
 	};
 
 	const nodeTemplates = [
-		{ type: 'sensor_input', label: 'Sensor Input', color: '#22c55e' },
-		{ type: 'actuator_output', label: 'Actuator Output', color: '#ef4444' },
-		{ type: 'comparison', label: 'Comparison', color: '#a855f7' },
-		{ type: 'logic_gate', label: 'Logic Gate', color: '#fbbf24' },
-		{ type: 'constant', label: 'Constant', color: '#3b82f6' },
+		{ type: 'sensor_input', label: 'Sensor Input', color: '#4CAF50' },
+		{ type: 'actuator_output', label: 'Actuator Output', color: '#F44336' },
+		{ type: 'comparison', label: 'Comparison', color: '#9C27B0' },
+		{ type: 'logic_gate', label: 'Logic Gate', color: '#FFC107' },
+		{ type: 'constant', label: 'Constant', color: '#2196F3' },
 	];
 
 	let nodeIdCounter = $state(1);

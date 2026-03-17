@@ -22,7 +22,7 @@
 
 <div
 	class="glass rounded-xl p-4 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
-	style="border-left: 3px solid {flow.enabled ? '#22c55e' : 'var(--border-subtle)'};"
+	style="border-left: 3px solid {flow.enabled ? 'var(--status-online)' : 'var(--border-subtle)'};"
 >
 	<div class="flex items-center justify-between mb-3">
 		<button class="text-left flex-1" onclick={() => goto(`/dashboard/flows/${flow.id}`)}>
@@ -34,7 +34,7 @@
 			<button
 				onclick={handleToggle}
 				class="relative w-10 h-5 rounded-full transition-colors duration-200"
-				style="background-color: {flow.enabled ? '#22c55e' : 'var(--border-subtle)'};"
+				style="background-color: {flow.enabled ? 'var(--status-online)' : 'var(--border-subtle)'};"
 				title={flow.enabled ? 'Disable' : 'Enable'}
 			>
 				<div
@@ -56,8 +56,8 @@
 		</div>
 	</div>
 	<div class="flex items-center gap-2 text-xs" style="color: var(--text-muted);">
-		<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style="background: {flow.enabled ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.05)'}; color: {flow.enabled ? '#22c55e' : 'var(--text-muted)'};">
-			<div class="w-1.5 h-1.5 rounded-full" style="background: {flow.enabled ? '#22c55e' : 'var(--text-muted)'};"></div>
+		<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full" style="background: {flow.enabled ? 'rgba(76,175,80,0.15)' : 'rgba(255,255,255,0.05)'}; color: {flow.enabled ? 'var(--status-online)' : 'var(--text-muted)'};">
+			<div class="w-1.5 h-1.5 rounded-full" style="background: {flow.enabled ? 'var(--status-online)' : 'var(--text-muted)'};"></div>
 			{flow.enabled ? 'Active' : 'Inactive'}
 		</span>
 	</div>

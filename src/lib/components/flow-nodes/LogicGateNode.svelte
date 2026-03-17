@@ -83,13 +83,13 @@
 	}
 	.node-delete-btn:hover {
 		opacity: 1;
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.15);
+		color: #F44336;
+		background: rgba(244, 67, 54, 0.15);
 	}
 	.logic-node .node-header {
-		background: rgba(251, 191, 36, 0.15);
+		background: rgba(255, 193, 7, 0.15);
 		border-radius: 11px 11px 0 0;
-		color: #fbbf24;
+		color: #FFC107;
 	}
 	.node-body {
 		padding: 24px 32px 28px;

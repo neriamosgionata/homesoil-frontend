@@ -392,27 +392,29 @@
 		}
 
 		const div = document.createElement("div");
-		div.classList.add("rounded-md");
-		div.classList.add("fixed");
-		div.classList.add("bg-gray-500");
-		div.classList.add("z-50");
-		div.classList.add("px-1");
+		div.classList.add("rounded-md", "fixed", "z-50", "px-2", "py-1");
 		div.style.top = position.y - 5 + "px";
 		div.style.left = position.x + 20 + "px";
+		div.style.backgroundColor = "var(--bg-secondary)";
+		div.style.border = "1px solid var(--border-subtle)";
 
 		const span = document.createElement("span");
-		span.classList.add("px-1");
+		span.classList.add("px-1", "text-sm");
+		span.style.color = "var(--text-secondary)";
 		span.textContent = "Suggested:";
 		div.append(span);
 
 		const sel = document.createElement("select");
+		sel.style.backgroundColor = "var(--bg-primary)";
+		sel.style.color = "var(--text-primary)";
+		sel.style.borderRadius = "4px";
+		sel.style.padding = "2px 4px";
+		sel.style.fontSize = "0.875rem";
 
 		for (const option of options) {
 			const opt = document.createElement("option");
 			opt.value = option;
 			opt.text = option;
-			opt.classList.add("rounded-md");
-			opt.classList.add("text-black");
 			sel.append(opt);
 		}
 
@@ -533,11 +535,11 @@
 	let errors = $derived(checkCodeConformity(code));
 </script>
 
-<div class="container">
+<div>
 	{#if toBeSaved}
-		<div class="bg-green-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+		<div class="rounded-lg px-4 py-3 mb-3 border" style="background: rgba(76,175,80,0.1); border-color: var(--accent); color: var(--accent);">
 			<strong class="font-bold">Unsaved code</strong>
-			<span class="block sm:inline">You have unsaved code!</span>
+			<span class="ml-1">You have unsaved code!</span>
 		</div>
 	{/if}
 
@@ -545,11 +547,11 @@
 		<div class="flex justify-start col-span-4">
 			<div class="w-10 min-h-[100px] p-4">
 				{#each code.split("\n") as _, i}
-					<div class={"flex font-medium " + (errors[i] ? " text-red-400" : "")}>
+					<div class="flex font-medium text-sm" style="color: {errors[i] ? 'var(--status-offline)' : 'var(--text-muted)'};">
 						<span>{i + 1}</span>
 						{#if errors[i]}
 							&nbsp;
-							<span>Error</span>
+							<span>!</span>
 						{/if}
 					</div>
 				{/each}
@@ -558,34 +560,37 @@
 			{#if isEditing}
 				<textarea
 					bind:value={code}
-					class="ml-10 w-full bg-white p-4 rounded-xl min-h-[100px] font-mono"
+					class="ml-4 w-full p-4 rounded-xl min-h-[100px] font-mono text-sm border focus:outline-none focus:ring-2"
+					style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
 					bind:this={textAreaRef}
 					onfocus={() => textAreaRef?.classList.add("focused")}
 				></textarea>
 			{:else}
-				<pre class="ml-10 whitespace-pre-wrap font-mono w-full bg-white p-4 rounded-xl">{code ||
-						"No code yet! Press edit"}</pre>
+				<pre class="ml-4 whitespace-pre-wrap font-mono w-full p-4 rounded-xl text-sm" style="background-color: var(--bg-primary); color: var(--text-primary);">{code || "No code yet! Press edit"}</pre>
 			{/if}
 		</div>
 
-		<div class="flex justify-end col-span-1 items-center gap-4">
+		<div class="flex justify-end col-span-1 items-center gap-3">
 			{#if isEditing}
 				<button
 					onclick={save}
-					class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded h-[40px]"
+					class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+					style="background-color: var(--accent); color: white;"
 				>
 					Save
 				</button>
 				<button
 					onclick={cancel}
-					class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded h-[40px]"
+					class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200"
+					style="background-color: var(--status-offline); color: white;"
 				>
 					Cancel
 				</button>
 			{:else}
 				<button
 					onclick={edit}
-					class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-[40px]"
+					class="px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 hover:bg-white/10"
+					style="color: var(--text-secondary); border: 1px solid var(--border-subtle);"
 				>
 					Edit
 				</button>
@@ -595,7 +600,7 @@
 
 	<div class="mt-4">
 		{#each Object.values(errors) as error}
-			<p class="text-red-500">
+			<p class="text-sm" style="color: var(--status-offline);">
 				<span class="font-bold">{`LINE ${error.line}: `}</span>
 				&nbsp; {`${error.message}`}
 			</p>
@@ -603,7 +608,7 @@
 			{#if error.sub_errors}
 				<ul class="list-disc ml-4">
 					{#each Object.values(error.sub_errors) as sub_error}
-						<li>
+						<li class="text-sm" style="color: var(--status-offline);">
 							<span class="font-bold">{`ARGUMENT ${sub_error.arg}: `}</span>
 							&nbsp; {`${sub_error.message}`}
 						</li>
@@ -613,6 +618,3 @@
 		{/each}
 	</div>
 </div>
-
-<style>
-</style>
