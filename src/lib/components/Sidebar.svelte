@@ -5,6 +5,7 @@
 
 	const navItems = [
 		{ href: "/dashboard", label: "Dashboard", icon: "home" },
+		{ href: "/dashboard/flows", label: "Flows", icon: "flow" },
 		{ href: "/dashboard/scripts", label: "Scripts", icon: "code" }
 	];
 
@@ -79,6 +80,24 @@
 					>
 						<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
 						<polyline points="9 22 9 12 15 12 15 22" />
+					</svg>
+				{:else if item.icon === "flow"}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="22"
+						height="22"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<circle cx="5" cy="6" r="3" />
+						<circle cx="19" cy="6" r="3" />
+						<circle cx="12" cy="18" r="3" />
+						<path d="M5 9v3a4 4 0 0 0 4 4h2" />
+						<path d="M19 9v3a4 4 0 0 1-4 4h-2" />
 					</svg>
 				{:else if item.icon === "code"}
 					<svg

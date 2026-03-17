@@ -9,6 +9,7 @@ import moment from "moment";
 import { socket_token, server_config } from "$lib/stores/store";
 import { get } from 'svelte/store';
 import type Script from "$lib/models/Script";
+import type Flow from "$lib/models/Flow";
 import { goto } from "$app/navigation";
 
 export class Websocket {
@@ -131,5 +132,25 @@ export class Websocket {
 
   removeScriptSchedule(script_id: number) {
     this.emitEvent(WebsocketEmitEventEnum.REMOVE_SCRIPT_SCHEDULE_EVENT, { id: script_id });
+  }
+
+  runScript(script_id: number) {
+    this.emitEvent(WebsocketEmitEventEnum.RUN_SCRIPT_EVENT, script_id);
+  }
+
+  addFlow(flow: Partial<Flow>) {
+    this.emitEvent(WebsocketEmitEventEnum.ADD_FLOW_EVENT, flow);
+  }
+
+  modifyFlow(flow: Flow) {
+    this.emitEvent(WebsocketEmitEventEnum.MODIFY_FLOW_EVENT, flow);
+  }
+
+  removeFlow(flow_id: number) {
+    this.emitEvent(WebsocketEmitEventEnum.REMOVE_FLOW_EVENT, flow_id);
+  }
+
+  toggleFlow(flow_id: number, enabled: boolean) {
+    this.emitEvent(WebsocketEmitEventEnum.TOGGLE_FLOW_EVENT, { id: flow_id, enabled });
   }
 }

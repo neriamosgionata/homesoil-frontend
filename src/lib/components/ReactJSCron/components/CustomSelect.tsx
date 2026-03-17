@@ -248,17 +248,6 @@ export default function CustomSelect(props: CustomSelectProps) {
 			onSelect={onOptionClick}
 			onDeselect={onOptionClick}
 			disabled={disabled}
-			dropdownAlign={
-				(unit.type === "minutes" || unit.type === "hours" || unit.type === "minutes-steps") &&
-				period !== "day" &&
-				period !== "hour"
-					? {
-							// Usage: https://github.com/yiminghe/dom-align
-							// Set direction to left to prevent dropdown to overlap window
-							points: ["tr", "br"]
-						}
-					: undefined
-			}
 			data-testid={`custom-select-${unit.type}`}
 			{...otherProps}
 		/>

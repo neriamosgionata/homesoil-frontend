@@ -16,6 +16,11 @@ enum WebsocketEmitEventEnum {
   MODIFY_SCRIPT_EVENT = "modify-script",
   ADD_SCRIPT_SCHEDULE_EVENT = "add-script-schedule",
   REMOVE_SCRIPT_SCHEDULE_EVENT = "remove-script-schedule",
+
+  ADD_FLOW_EVENT = "add-flow",
+  MODIFY_FLOW_EVENT = "modify-flow",
+  REMOVE_FLOW_EVENT = "remove-flow",
+  TOGGLE_FLOW_EVENT = "toggle-flow",
 }
 
 export default WebsocketEmitEventEnum;

@@ -8,7 +8,7 @@
 	import CronInput from "$lib/components/CronInput.svelte";
 	import type Script from "$lib/models/Script";
 
-	let id = page.params.id;
+	let id = $derived(page.params.id!);
 
 	let currentScript: Script | null = $derived($scripts[id]);
 

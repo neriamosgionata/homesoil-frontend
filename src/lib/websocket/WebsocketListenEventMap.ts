@@ -3,6 +3,7 @@ import type Sensor from "$lib/models/Sensor";
 import {
   actuators as actuatorStore,
   dashboard_message,
+  flows as flowStore,
   last_sensor_reads as lastSensorsReadStore,
   scripts,
   sensor_reads as sensorReadStore,
@@ -12,6 +13,7 @@ import {
 import type SensorRead from "$lib/models/SensorRead";
 import type SensorTypeEnum from "$lib/enums/SensorTypeEnum";
 import type Actuator from "$lib/models/Actuator";
+import type Flow from "$lib/models/Flow";
 import { get } from "svelte/store";
 import type Script from "$lib/models/Script";
 import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
@@ -81,7 +83,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
   [WebsocketListenEventEnum.SENSOR_UNREGISTER_EVENT]: ({ sensor_id }: { sensor_id: number }) => {
     sensorStore.update(sensors => {
       delete sensors[sensor_id];
-      return sensors;
+      return { ...sensors };
     });
   },
 
@@ -204,7 +206,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
   [WebsocketListenEventEnum.ACTUATOR_UNREGISTER_EVENT]: ({ actuator_id }: { actuator_id: number }) => {
     actuatorStore.update(actuators => {
       delete actuators[actuator_id];
-      return actuators;
+      return { ...actuators };
     });
   },
 
@@ -266,7 +268,7 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
   [WebsocketListenEventEnum.SCRIPT_DELETED_EVENT]: (script: Script) => {
     scripts.update(scripts => {
       delete scripts[script.id];
-      return scripts;
+      return { ...scripts };
     });
   },
 
@@ -295,6 +297,45 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     scripts.update(scripts => {
       scripts[script.id] = script;
       return { ...scripts };
+    });
+  },
+
+  // FLOWS
+
+  [WebsocketListenEventEnum.ALL_FLOWS_EVENT]: ({ flows }: { flows: Flow[] }) => {
+    flowStore.set(
+      flows.reduce((acc, flow) => {
+        acc[flow.id] = flow;
+        return acc;
+      }, {} as { [p: string]: Flow })
+    );
+  },
+
+  [WebsocketListenEventEnum.FLOW_SAVED_EVENT]: ({ flow }: { flow: Flow }) => {
+    flowStore.update(flows => {
+      flows[flow.id] = flow;
+      return { ...flows };
+    });
+  },
+
+  [WebsocketListenEventEnum.FLOW_MODIFIED_EVENT]: ({ flow }: { flow: Flow }) => {
+    flowStore.update(flows => {
+      flows[flow.id] = flow;
+      return { ...flows };
+    });
+  },
+
+  [WebsocketListenEventEnum.FLOW_DELETED_EVENT]: ({ flow_id }: { flow_id: number }) => {
+    flowStore.update(flows => {
+      delete flows[flow_id];
+      return { ...flows };
+    });
+  },
+
+  [WebsocketListenEventEnum.FLOW_TOGGLED_EVENT]: ({ flow }: { flow: Flow }) => {
+    flowStore.update(flows => {
+      flows[flow.id] = flow;
+      return { ...flows };
     });
   },
 };

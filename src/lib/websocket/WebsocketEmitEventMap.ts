@@ -19,6 +19,11 @@ const WebsocketEmitEventMap: { [p: string]: any } = {
 
     [WebsocketEmitEventEnum.ADD_SCRIPT_SCHEDULE_EVENT]: [""],
     [WebsocketEmitEventEnum.REMOVE_SCRIPT_SCHEDULE_EVENT]: [""],
+
+    [WebsocketEmitEventEnum.ADD_FLOW_EVENT]: [""],
+    [WebsocketEmitEventEnum.MODIFY_FLOW_EVENT]: [""],
+    [WebsocketEmitEventEnum.REMOVE_FLOW_EVENT]: [0],
+    [WebsocketEmitEventEnum.TOGGLE_FLOW_EVENT]: [""],
 }
 
 export default WebsocketEmitEventMap;

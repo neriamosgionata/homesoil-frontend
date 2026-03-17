@@ -40,6 +40,15 @@ enum WebsocketListenEventEnum {
 
   SCRIPT_SCHEDULE_ADDED_EVENT = "script-schedule-added",
   SCRIPT_SCHEDULE_REMOVED_EVENT = "script-schedule-removed",
+
+  //    ------------------------------------------------------
+
+  ALL_FLOWS_EVENT = "all-flows",
+
+  FLOW_SAVED_EVENT = "flow-saved",
+  FLOW_MODIFIED_EVENT = "flow-modified",
+  FLOW_DELETED_EVENT = "flow-deleted",
+  FLOW_TOGGLED_EVENT = "flow-toggled",
 }
 
 export default WebsocketListenEventEnum;
