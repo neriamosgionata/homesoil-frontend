@@ -24,6 +24,7 @@ enum WebsocketListenEventEnum {
 
   ACTUATOR_NAME_CHANGE_EVENT = "actuator-name-change",
   ACTUATOR_STATE_CHANGE_EVENT = "actuator-state-change",
+  ACTUATOR_INTERMITTENT_CHANGE_EVENT = "actuator-intermittent-change",
 
   ACTUATOR_CHANGE_ONLINE_EVENT = "actuator-change-online",
 

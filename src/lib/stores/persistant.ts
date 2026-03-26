@@ -1,17 +1,13 @@
 import {writable, type Writable} from 'svelte/store';
-import 'node-localstorage/register';
-import SLS from "secure-ls";
-
-const ls = new SLS({
-    encodingType: 'aes',
-    isCompression: false,
-    encryptionSecret: '32871903bhn2k,gyc8soia783t2yhu1jklbgdyhl^#&*@^!&#*@'
-});
 
 const initializeStore = <T>(key: string, initialValue: T): T => {
     if (typeof window !== 'undefined') {
-        const storedValue = ls.get(key);
-        return storedValue ? JSON.parse(storedValue) : initialValue;
+        try {
+            const storedValue = localStorage.getItem(key);
+            return storedValue ? JSON.parse(storedValue) : initialValue;
+        } catch {
+            return initialValue;
+        }
     } else {
         return initialValue;
     }
@@ -19,7 +15,7 @@ const initializeStore = <T>(key: string, initialValue: T): T => {
 
 const saveToLocalStorage = <T>(key: string, value: T): void => {
     if (typeof window !== 'undefined') {
-        ls.set(key, JSON.stringify(value));
+        localStorage.setItem(key, JSON.stringify(value));
     }
 };
 

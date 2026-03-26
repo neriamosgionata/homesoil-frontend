@@ -21,16 +21,16 @@
 </script>
 
 <div
-	class="glass rounded-xl p-4 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
+	class="glass rounded-xl p-5 transition-all duration-200 hover:scale-[1.02] cursor-pointer"
 	style="border-left: 3px solid {flow.enabled ? 'var(--status-online)' : 'var(--border-subtle)'};"
 >
-	<div class="flex items-center justify-between mb-3">
-		<button class="text-left flex-1" onclick={() => goto(`/dashboard/flows/${flow.id}`)}>
+	<div class="flex items-center justify-between gap-2 mb-3 min-w-0">
+		<button class="text-left min-w-0 flex-1" onclick={() => goto(`/dashboard/flows/${flow.id}`)}>
 			<h3 class="font-semibold truncate" style="color: var(--text-primary);">
 				{flow.title || 'Untitled Flow'}
 			</h3>
 		</button>
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-2 shrink-0">
 			<button
 				onclick={handleToggle}
 				class="relative w-10 h-5 rounded-full transition-colors duration-200"

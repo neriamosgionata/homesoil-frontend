@@ -5,6 +5,8 @@ enum WebsocketEmitEventEnum {
 
   TOGGLE_ACTUATOR_EVENT = "toggle-actuator",
   PULSE_ACTUATOR_EVENT = "pulse-actuator",
+  INTERMITTENT_ACTUATOR_EVENT = "intermittent-actuator",
+  STOP_INTERMITTENT_ACTUATOR_EVENT = "stop-intermittent-actuator",
   RENAME_ACTUATOR_EVENT = "rename-actuator",
   REMOVE_ACTUATOR_EVENT = "remove-actuator",
 

@@ -195,6 +195,9 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
         port: actuator_port,
         state: actuator_state,
         pulse: actuator_pulse,
+        intermittent: false,
+        intermittent_on_ms: 1000,
+        intermittent_off_ms: 1000,
         online,
         created_at,
         updated_at: null,
@@ -233,6 +236,28 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
       const actuator = actuators[actuator_id];
       if (actuator) {
         actuators[actuator_id] = { ...actuator, state: actuator_state, updated_at };
+      }
+      return { ...actuators };
+    });
+  },
+
+  [WebsocketListenEventEnum.ACTUATOR_INTERMITTENT_CHANGE_EVENT]: ({ actuator_id, intermittent, intermittent_on_ms, intermittent_off_ms, updated_at }: {
+    actuator_id: number,
+    intermittent: boolean,
+    intermittent_on_ms?: number,
+    intermittent_off_ms?: number,
+    updated_at: string,
+  }) => {
+    actuatorStore.update(actuators => {
+      const actuator = actuators[actuator_id];
+      if (actuator) {
+        actuators[actuator_id] = {
+          ...actuator,
+          intermittent,
+          ...(intermittent_on_ms !== undefined && { intermittent_on_ms }),
+          ...(intermittent_off_ms !== undefined && { intermittent_off_ms }),
+          updated_at,
+        };
       }
       return { ...actuators };
     });

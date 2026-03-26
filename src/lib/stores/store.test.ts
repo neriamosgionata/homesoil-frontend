@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { get } from 'svelte/store';
 
-vi.mock('secure-ls', () => {
-    return {
-        default: class {
-            get() { return null; }
-            set() {}
-        }
-    };
+// Mock localStorage for persistentWritable
+const mockStorage: Record<string, string> = {};
+vi.stubGlobal('localStorage', {
+    getItem: (key: string) => mockStorage[key] ?? null,
+    setItem: (key: string, value: string) => { mockStorage[key] = value; },
+    removeItem: (key: string) => { delete mockStorage[key]; },
+    clear: () => { Object.keys(mockStorage).forEach(k => delete mockStorage[k]); },
 });
 
-import { flows, sensors, actuators, last_sensor_reads, scripts } from './store';
+import { flows, sensors, actuators, last_sensor_reads, scripts, socket_token } from './store';
 
 describe('flows store', () => {
     beforeEach(() => {
@@ -91,7 +91,7 @@ describe('flows store', () => {
         });
 
         const after = get(flows);
-        expect(before).not.toBe(after); // Different reference
+        expect(before).not.toBe(after);
         expect(after[1].title).toBe('Updated');
     });
 });
@@ -126,7 +126,7 @@ describe('actuators store', () => {
 
     it('can set and update actuator state', () => {
         actuators.set({
-            1: { id: 1, name: 'Fan', ip_address: '127.0.0.1', port: 8684, state: false, online: true, pulse: false, created_at: '', updated_at: null },
+            1: { id: 1, name: 'Fan', ip_address: '127.0.0.1', port: 8684, state: false, online: true, pulse: false, intermittent: false, intermittent_on_ms: 1000, intermittent_off_ms: 1000, created_at: '', updated_at: null },
         });
 
         actuators.update(a => {
@@ -145,5 +145,43 @@ describe('scripts store', () => {
 
     it('starts empty', () => {
         expect(get(scripts)).toEqual({});
+    });
+});
+
+describe('socket_token store', () => {
+    beforeEach(() => {
+        socket_token.set({ token: '' });
+    });
+
+    it('has default empty token', () => {
+        const val = get(socket_token);
+        expect(val.token).toBe('');
+        expect(val.pin).toBeUndefined();
+    });
+
+    it('can store a token', () => {
+        socket_token.set({ token: 'abc123' });
+        expect(get(socket_token).token).toBe('abc123');
+    });
+
+    it('can store a pin for pairing', () => {
+        socket_token.set({ token: '', pin: '123456' });
+        const val = get(socket_token);
+        expect(val.pin).toBe('123456');
+        expect(val.token).toBe('');
+    });
+
+    it('persists to localStorage', () => {
+        socket_token.set({ token: 'persisted_token' });
+        const stored = JSON.parse(mockStorage['socket_token'] || '{}');
+        expect(stored.token).toBe('persisted_token');
+    });
+
+    it('clears pin after receiving token', () => {
+        socket_token.set({ token: '', pin: '654321' });
+        socket_token.set({ token: 'new_session_token' });
+        const val = get(socket_token);
+        expect(val.token).toBe('new_session_token');
+        expect(val.pin).toBeUndefined();
     });
 });

@@ -46,7 +46,7 @@
 		</div>
 
 		{#if flowsArray.length > 0}
-			<div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+			<div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
 				{#each flowsArray as flow, i}
 					<div in:fade={{ duration: 200, delay: 50 + i * 50 }}>
 						<FlowCard {flow} />

@@ -56,6 +56,25 @@
         $ws.pulseActuator(actuator.id);
     };
 
+    let showIntermittentConfig = $state(false);
+    let onMs = $state(1000);
+    let offMs = $state(1000);
+
+    const toggleIntermittent = (e: MouseEvent) => {
+        e.stopPropagation();
+        if (actuator.intermittent) {
+            $ws.stopIntermittentActuator(actuator.id);
+        } else {
+            showIntermittentConfig = !showIntermittentConfig;
+        }
+    };
+
+    const startIntermittent = (e: MouseEvent) => {
+        e.stopPropagation();
+        $ws.intermittentActuator(actuator.id, onMs, offMs);
+        showIntermittentConfig = false;
+    };
+
     let isDisabled = $derived(!actuator.online);
 
     let newNameInput: HTMLInputElement | undefined = $state(undefined);
@@ -169,24 +188,82 @@
                     {/if}
                 </button>
             {:else}
-                <label class="relative inline-flex items-center {isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}">
-                    <input
-                        type="checkbox"
-                        class="sr-only peer"
-                        onclick={toggle}
-                        disabled={isDisabled}
-                        checked={actuator.state}
-                    >
-                    <div class="w-14 h-7 rounded-full peer transition-colors duration-200"
-                         style="background-color: {actuator.state ? 'var(--accent)' : 'var(--border-subtle)'};">
-                        <div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200"
-                             style="transform: translateX({actuator.state ? '28px' : '0'});">
-                        </div>
+                <div class="flex flex-col items-center gap-2 w-full">
+                    <div class="flex items-center gap-3">
+                        <label class="relative inline-flex items-center {isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}">
+                            <input
+                                type="checkbox"
+                                class="sr-only peer"
+                                onclick={toggle}
+                                disabled={isDisabled}
+                                checked={actuator.state}
+                            >
+                            <div class="w-14 h-7 rounded-full peer transition-colors duration-200"
+                                 style="background-color: {actuator.state ? 'var(--accent)' : 'var(--border-subtle)'};">
+                                <div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200"
+                                     style="transform: translateX({actuator.state ? '28px' : '0'});">
+                                </div>
+                            </div>
+                            <span class="ml-3 text-sm font-medium" style="color: {actuator.state ? 'var(--accent)' : 'var(--text-secondary)'};">
+                                {actuator.state ? "On" : "Off"}
+                            </span>
+                        </label>
+                        <button
+                            class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200"
+                            style="
+                                background-color: {actuator.intermittent ? '#F59E0B' : 'var(--bg-primary)'};
+                                color: {actuator.intermittent ? 'white' : 'var(--text-secondary)'};
+                                border: 1px solid {actuator.intermittent ? '#F59E0B' : 'var(--border-subtle)'};
+                                opacity: {isDisabled ? '0.5' : '1'};
+                                cursor: {isDisabled ? 'not-allowed' : 'pointer'};
+                            "
+                            onclick={toggleIntermittent}
+                            disabled={isDisabled}
+                        >
+                            {actuator.intermittent ? "Stop" : "Intermittent"}
+                        </button>
                     </div>
-                    <span class="ml-3 text-sm font-medium" style="color: {actuator.state ? 'var(--accent)' : 'var(--text-secondary)'};">
-                        {actuator.state ? "On" : "Off"}
-                    </span>
-                </label>
+                    {#if showIntermittentConfig}
+                        <div class="flex flex-col gap-2 w-full px-2" onclick={(e) => e.stopPropagation()}>
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs" style="color: var(--text-muted); min-width: 32px;">ON</label>
+                                <input
+                                    type="number"
+                                    class="flex-1 px-2 py-1 text-xs rounded-md border"
+                                    style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
+                                    bind:value={onMs}
+                                    min="100"
+                                    step="100"
+                                />
+                                <span class="text-xs" style="color: var(--text-muted);">ms</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label class="text-xs" style="color: var(--text-muted); min-width: 32px;">OFF</label>
+                                <input
+                                    type="number"
+                                    class="flex-1 px-2 py-1 text-xs rounded-md border"
+                                    style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
+                                    bind:value={offMs}
+                                    min="100"
+                                    step="100"
+                                />
+                                <span class="text-xs" style="color: var(--text-muted);">ms</span>
+                            </div>
+                            <button
+                                class="px-4 py-1.5 rounded-lg text-xs font-medium transition-all"
+                                style="background-color: #F59E0B; color: white;"
+                                onclick={startIntermittent}
+                            >
+                                Start Intermittent
+                            </button>
+                        </div>
+                    {/if}
+                    {#if actuator.intermittent}
+                        <span class="text-xs" style="color: #F59E0B;">
+                            Cycling: {actuator.intermittent_on_ms}ms on / {actuator.intermittent_off_ms}ms off
+                        </span>
+                    {/if}
+                </div>
             {/if}
         </div>
     </div>

@@ -129,6 +129,9 @@
 				<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
 				<span>Connected</span>
 			</div>
+			<div class="text-xs mt-1" style="color: var(--text-muted); opacity: 0.7;">
+				{location.hostname}:{location.port}
+			</div>
 		{:else}
 			<div class="flex justify-center">
 				<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>

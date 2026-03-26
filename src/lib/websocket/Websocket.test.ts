@@ -4,14 +4,13 @@ import WebsocketEmitEventEnum from '$lib/enums/WebsocketEmitEventEnum';
 import type Flow from '$lib/models/Flow';
 import type Script from '$lib/models/Script';
 
-// Mock secure-ls
-vi.mock('secure-ls', () => {
-    return {
-        default: class {
-            get() { return null; }
-            set() {}
-        }
-    };
+// Mock localStorage for persistentWritable
+const mockStorage: Record<string, string> = {};
+vi.stubGlobal('localStorage', {
+    getItem: (key: string) => mockStorage[key] ?? null,
+    setItem: (key: string, value: string) => { mockStorage[key] = value; },
+    removeItem: (key: string) => { delete mockStorage[key]; },
+    clear: () => { Object.keys(mockStorage).forEach(k => delete mockStorage[k]); },
 });
 
 // Mock $app/navigation

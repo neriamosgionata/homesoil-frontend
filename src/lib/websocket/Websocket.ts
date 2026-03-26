@@ -6,7 +6,7 @@ import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
 import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
 import moment from "moment";
-import { socket_token, server_config } from "$lib/stores/store";
+import { socket_token } from "$lib/stores/store";
 import { get } from 'svelte/store';
 import type Script from "$lib/models/Script";
 import type Flow from "$lib/models/Flow";
@@ -19,10 +19,15 @@ export class Websocket {
   >;
 
   connect() {
-    const config = get(server_config);
-    const host = config.host || location.hostname;
-    const port = config.port || 4000;
-    const serverUrl = `${host}:${port}`;
+    const serverUrl = `${location.hostname}:4000`;
+
+    const storedAuth = get(socket_token);
+    const auth: { token?: string; pin?: string } = {};
+    if (storedAuth.token) {
+      auth.token = storedAuth.token;
+    } else if (storedAuth.pin) {
+      auth.pin = storedAuth.pin;
+    }
 
     this.socket = io(
       serverUrl.trim(),
@@ -30,11 +35,14 @@ export class Websocket {
         transports: ["websocket", "polling"],
         upgrade: true,
         rememberUpgrade: true,
-        auth: {
-          token: get(socket_token).token
-        }
+        auth,
       }
     ) as unknown as Socket<typeof WebsocketListenEventMap, typeof WebsocketEmitEventMap>;
+
+    this.socket.on("session_token", ({ token }: { token: string }) => {
+      socket_token.set({ token });
+      console.log("Session token received and stored");
+    });
 
     this.socket.on("disconnect", () => {
       console.log("Disconnected from websocket server");
@@ -47,8 +55,6 @@ export class Websocket {
     });
 
     this.registerEventListeners();
-
-
   }
 
   close() {
@@ -96,6 +102,14 @@ export class Websocket {
 
   pulseActuator(actuator_id: number) {
     this.emitEvent(WebsocketEmitEventEnum.PULSE_ACTUATOR_EVENT, actuator_id);
+  }
+
+  intermittentActuator(actuator_id: number, on_ms: number, off_ms: number) {
+    this.emitEvent(WebsocketEmitEventEnum.INTERMITTENT_ACTUATOR_EVENT, { actuator_id, on_ms, off_ms });
+  }
+
+  stopIntermittentActuator(actuator_id: number) {
+    this.emitEvent(WebsocketEmitEventEnum.STOP_INTERMITTENT_ACTUATOR_EVENT, actuator_id);
   }
 
   renameActuator(actuator_id: number, name: string) {

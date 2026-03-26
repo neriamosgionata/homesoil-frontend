@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { get } from 'svelte/store';
 
-vi.mock('secure-ls', () => {
-    return {
-        default: class {
-            get() { return null; }
-            set() {}
-        }
-    };
+// Mock localStorage for persistentWritable
+const mockStorage: Record<string, string> = {};
+vi.stubGlobal('localStorage', {
+    getItem: (key: string) => mockStorage[key] ?? null,
+    setItem: (key: string, value: string) => { mockStorage[key] = value; },
+    removeItem: (key: string) => { delete mockStorage[key]; },
+    clear: () => { Object.keys(mockStorage).forEach(k => delete mockStorage[k]); },
 });
 
 import WebsocketListenEventMap from './WebsocketListenEventMap';
@@ -204,7 +204,7 @@ describe('WebsocketListenEventMap - Actuators', () => {
 
         handler({
             actuators: [
-                { id: 1, name: 'Fan', ip_address: '127.0.0.1', port: 8684, state: false, online: true, pulse: false, created_at: '', updated_at: null },
+                { id: 1, name: 'Fan', ip_address: '127.0.0.1', port: 8684, state: false, online: true, pulse: false, intermittent: false, intermittent_on_ms: 1000, intermittent_off_ms: 1000, created_at: '', updated_at: null },
             ],
         });
 
@@ -213,7 +213,7 @@ describe('WebsocketListenEventMap - Actuators', () => {
 
     it('ACTUATOR_STATE_CHANGE_EVENT updates state', () => {
         actuators.set({
-            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, created_at: '', updated_at: null },
+            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, intermittent: false, intermittent_on_ms: 1000, intermittent_off_ms: 1000, created_at: '', updated_at: null },
         });
 
         const handler = WebsocketListenEventMap[WebsocketListenEventEnum.ACTUATOR_STATE_CHANGE_EVENT];
@@ -224,7 +224,7 @@ describe('WebsocketListenEventMap - Actuators', () => {
 
     it('ACTUATOR_CHANGE_ONLINE_EVENT updates online status', () => {
         actuators.set({
-            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, created_at: '', updated_at: null },
+            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, intermittent: false, intermittent_on_ms: 1000, intermittent_off_ms: 1000, created_at: '', updated_at: null },
         });
 
         const handler = WebsocketListenEventMap[WebsocketListenEventEnum.ACTUATOR_CHANGE_ONLINE_EVENT];
@@ -254,7 +254,7 @@ describe('WebsocketListenEventMap - Actuators', () => {
 
     it('ACTUATOR_UNREGISTER_EVENT removes actuator', () => {
         actuators.set({
-            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, created_at: '', updated_at: null },
+            1: { id: 1, name: 'Fan', ip_address: '', port: 0, state: false, online: true, pulse: false, intermittent: false, intermittent_on_ms: 1000, intermittent_off_ms: 1000, created_at: '', updated_at: null },
         });
 
         const handler = WebsocketListenEventMap[WebsocketListenEventEnum.ACTUATOR_UNREGISTER_EVENT];

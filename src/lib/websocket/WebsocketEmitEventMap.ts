@@ -7,6 +7,8 @@ const WebsocketEmitEventMap: { [p: string]: any } = {
 
     [WebsocketEmitEventEnum.TOGGLE_ACTUATOR_EVENT]: [0],
     [WebsocketEmitEventEnum.PULSE_ACTUATOR_EVENT]: [0],
+    [WebsocketEmitEventEnum.INTERMITTENT_ACTUATOR_EVENT]: [""],
+    [WebsocketEmitEventEnum.STOP_INTERMITTENT_ACTUATOR_EVENT]: [0],
 
     [WebsocketEmitEventEnum.RENAME_ACTUATOR_EVENT]: [""],
 

@@ -55,10 +55,44 @@
 			<input
 				type="checkbox"
 				checked={data.pulse ?? false}
-				onchange={(e) => updateData({ pulse: (e.target as HTMLInputElement).checked })}
+				onchange={(e) => updateData({ pulse: (e.target as HTMLInputElement).checked, intermittent: false })}
 			/>
 			<span>Pulse mode</span>
 		</label>
+		<label class="node-checkbox">
+			<input
+				type="checkbox"
+				checked={data.intermittent ?? false}
+				onchange={(e) => updateData({ intermittent: (e.target as HTMLInputElement).checked, pulse: false })}
+			/>
+			<span>Intermittent</span>
+		</label>
+		{#if data.intermittent}
+			<div class="intermittent-config">
+				<label class="node-input-label">
+					<span>ON (ms)</span>
+					<input
+						type="number"
+						value={data.intermittent_on_ms ?? 1000}
+						onchange={(e) => updateData({ intermittent_on_ms: Number((e.target as HTMLInputElement).value) })}
+						class="node-input"
+						min="100"
+						step="100"
+					/>
+				</label>
+				<label class="node-input-label">
+					<span>OFF (ms)</span>
+					<input
+						type="number"
+						value={data.intermittent_off_ms ?? 1000}
+						onchange={(e) => updateData({ intermittent_off_ms: Number((e.target as HTMLInputElement).value) })}
+						class="node-input"
+						min="100"
+						step="100"
+					/>
+				</label>
+			</div>
+		{/if}
 	</div>
 	<Handle type="target" position={Position.Left} id="trigger" class="handle-target" />
 </div>
@@ -163,5 +197,32 @@
 	}
 	.node-checkbox input {
 		accent-color: #F44336;
+	}
+	.intermittent-config {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		margin-top: 4px;
+		padding: 6px 8px;
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 6px;
+	}
+	.node-input-label {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 6px;
+		font-size: 10px;
+		color: var(--text-secondary, #aaa);
+	}
+	.node-input {
+		width: 70px;
+		padding: 2px 4px;
+		border-radius: 4px;
+		border: 1px solid var(--border-subtle, #444);
+		background: var(--bg-primary, #111);
+		color: var(--text-primary, #fff);
+		font-size: 10px;
+		text-align: right;
 	}
 </style>
