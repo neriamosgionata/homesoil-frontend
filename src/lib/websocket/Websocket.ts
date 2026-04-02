@@ -6,7 +6,7 @@ import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
 import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
 import moment from "moment";
-import { socket_token } from "$lib/stores/store";
+import { socket_token, server_settings } from "$lib/stores/store";
 import { get } from 'svelte/store';
 import type Script from "$lib/models/Script";
 import type Flow from "$lib/models/Flow";
@@ -19,7 +19,10 @@ export class Websocket {
   >;
 
   connect() {
-    const serverUrl = `${location.hostname}:4000`;
+    const settings = get(server_settings);
+    const host = settings.host || location.hostname;
+    const port = settings.port || 4000;
+    const serverUrl = `${host}:${port}`;
 
     const storedAuth = get(socket_token);
     const auth: { token?: string; pin?: string } = {};

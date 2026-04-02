@@ -16,3 +16,4 @@ export const sensor_reads: Writable<SensorRead[]> = writable([]);
 export const actuators: Writable<{ [p: string | number]: Actuator }> = writable({});
 export const sensor_reads_loading: Writable<boolean> = writable(false);
 export const socket_token: Writable<{ token: string; pin?: string }> = persistentWritable<{ token: string; pin?: string }>("socket_token", {token: ""});
+export const server_settings: Writable<{ host: string; port: number }> = persistentWritable<{ host: string; port: number }>("server_settings", { host: "", port: 4000 });

@@ -6,6 +6,7 @@
 	import type { Websocket } from "$lib/websocket/Websocket";
 	import moment from "moment";
 	import ProgressBar from "$lib/components/ProgressBar.svelte";
+	import SensorChart from "$lib/components/SensorChart.svelte";
 	import Parser from "$lib/parser/Parser";
 	import { fly } from "svelte/transition";
 	import { goto } from "$app/navigation";
@@ -172,6 +173,16 @@
 			Load Readings
 		</button>
 	</div>
+
+	<!-- Chart -->
+	{#if $sensor_reads.length > 0}
+		<div class="glass rounded-xl p-4">
+			<h3 class="font-semibold mb-3" style="color: var(--text-primary);">
+				Chart ({$sensor_reads.length} points)
+			</h3>
+			<SensorChart reads={$sensor_reads} sensorType={$sensors[id]?.sensor_type} />
+		</div>
+	{/if}
 
 	<!-- Readings -->
 	{#if $sensor_reads.length > 0}
