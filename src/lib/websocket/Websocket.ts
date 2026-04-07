@@ -22,7 +22,9 @@ export class Websocket {
     const settings = get(server_settings);
     const host = settings.host || location.hostname;
     const port = settings.port || 4000;
-    const serverUrl = `${host}:${port}`;
+    // Detect TLS: if the page is served over HTTPS, use secure WebSocket
+    const protocol = typeof location !== 'undefined' && location.protocol === 'https:' ? 'https' : 'http';
+    const serverUrl = `${protocol}://${host}:${port}`;
 
     const storedAuth = get(socket_token);
     const auth: { token?: string; pin?: string } = {};
