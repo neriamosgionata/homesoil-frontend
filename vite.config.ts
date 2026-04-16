@@ -15,7 +15,9 @@ export default defineConfig({
     server: {
         allowedHosts: ["*"],
     },
-    optimizeDeps: {
-        exclude: ["svelte-preprocess-react"]
-    }
+    build: {
+        target: "es2022",
+        minify: "oxc",
+        cssMinify: true,
+    },
 });

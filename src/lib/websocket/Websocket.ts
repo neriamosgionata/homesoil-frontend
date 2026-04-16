@@ -1,12 +1,16 @@
 import { io } from 'socket.io-client';
-import type { Socket } from "socket.io";
+import type { Socket } from "socket.io-client";
 import WebsocketListenEventMap from "$lib/websocket/WebsocketListenEventMap";
 import WebsocketEmitEventMap from "$lib/websocket/WebsocketEmitEventMap";
 import WebsocketEmitEventEnum from "$lib/enums/WebsocketEmitEventEnum";
 import type WebsocketListenEventEnum from "$lib/enums/WebsocketListenEventEnum";
 
-import moment from "moment";
 import { socket_token, server_settings } from "$lib/stores/store";
+
+function formatDateTime(d: Date): string {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
 import { get } from 'svelte/store';
 import type Script from "$lib/models/Script";
 import type Flow from "$lib/models/Flow";
@@ -91,8 +95,8 @@ export class Websocket {
       WebsocketEmitEventEnum.GET_SENSOR_READINGS_EVENT,
       JSON.stringify({
         id: sensor_id,
-        from_date: moment(from_date).format("YYYY-MM-DD HH:mm:ss"),
-        to_date: moment(to_date).format("YYYY-MM-DD HH:mm:ss")
+        from_date: formatDateTime(from_date),
+        to_date: formatDateTime(to_date)
       })
     );
   }

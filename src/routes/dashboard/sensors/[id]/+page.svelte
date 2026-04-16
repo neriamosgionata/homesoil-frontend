@@ -4,7 +4,12 @@
 	import { getContext, onDestroy, onMount } from "svelte";
 	import { writable, type Writable } from "svelte/store";
 	import type { Websocket } from "$lib/websocket/Websocket";
-	import moment from "moment";
+
+	const fmtFull = (d: string) => {
+		const dt = new Date(d);
+		const pad = (n: number) => n.toString().padStart(2, "0");
+		return `${pad(dt.getDate())}/${pad(dt.getMonth() + 1)}/${dt.getFullYear()} ${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+	};
 	import ProgressBar from "$lib/components/ProgressBar.svelte";
 	import SensorChart from "$lib/components/SensorChart.svelte";
 	import Parser from "$lib/parser/Parser";
@@ -15,8 +20,8 @@
 
 	const ws: Writable<Websocket> = getContext("ws");
 
-	let from_date: Writable<Date> = writable(moment().subtract(5, "minutes").toDate());
-	let to_date: Writable<Date> = writable(moment().toDate());
+	let from_date: Writable<Date> = writable(new Date(Date.now() - 5 * 60 * 1000));
+	let to_date: Writable<Date> = writable(new Date());
 
 	let isRenaming = $state(false);
 	let newName = $state("");
@@ -42,11 +47,11 @@
 	};
 
 	const newFromDate = (e: any) => {
-		from_date.set(moment(e.target.value).toDate());
+		from_date.set(new Date(e.target.value));
 	};
 
 	const newToDate = (e: any) => {
-		to_date.set(moment(e.target.value).toDate());
+		to_date.set(new Date(e.target.value));
 	};
 
 	const loadReadings = () => {
@@ -202,7 +207,7 @@
 							</p>
 						</div>
 						<p class="text-xs" style="color: var(--text-muted);">
-							{moment(read.created_at).format("DD/MM/YYYY HH:mm:ss")}
+							{fmtFull(read.created_at)}
 						</p>
 					</div>
 				{/each}

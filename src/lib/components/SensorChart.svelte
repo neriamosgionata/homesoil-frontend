@@ -2,7 +2,14 @@
 	import type SensorRead from "$lib/models/SensorRead";
 	import type SensorTypeEnum from "$lib/enums/SensorTypeEnum";
 	import Parser from "$lib/parser/Parser";
-	import moment from "moment";
+	const fmtTime = (d: string) => {
+		const dt = new Date(d);
+		return `${dt.getHours().toString().padStart(2, "0")}:${dt.getMinutes().toString().padStart(2, "0")}`;
+	};
+	const fmtFull = (d: string) => {
+		const dt = new Date(d);
+		return `${dt.getDate().toString().padStart(2, "0")}/${(dt.getMonth() + 1).toString().padStart(2, "0")} ${dt.getHours().toString().padStart(2, "0")}:${dt.getMinutes().toString().padStart(2, "0")}:${dt.getSeconds().toString().padStart(2, "0")}`;
+	};
 
 	interface Props {
 		reads: SensorRead[];
@@ -60,7 +67,7 @@
 					const idx = Math.round((i / (Math.min(5, reads.length) - 1)) * (reads.length - 1));
 					return {
 						x: PADDING.left + (idx / Math.max(reads.length - 1, 1)) * chartW,
-						label: moment(reads[idx].created_at).format("HH:mm")
+						label: fmtTime(reads[idx].created_at)
 					};
 				})
 			: []
@@ -148,7 +155,7 @@
 				{Parser.parseSensorReadValue(reads[hoveredIndex].sensor_value, sensorType)}
 			</text>
 			<text x={px} y={py - 13} text-anchor="middle" fill="var(--text-muted)" font-size="9">
-				{moment(reads[hoveredIndex].created_at).format("DD/MM HH:mm:ss")}
+				{fmtFull(reads[hoveredIndex].created_at)}
 			</text>
 		{/if}
 	</svg>
@@ -158,7 +165,7 @@
 			{Parser.parseSensorReadValue(reads[0].sensor_value, sensorType)}
 		</p>
 		<p class="text-xs mt-1" style="color: var(--text-muted);">
-			{moment(reads[0].created_at).format("DD/MM/YYYY HH:mm:ss")}
+			{fmtFull(reads[0].created_at)}
 		</p>
 		<p class="text-xs mt-2" style="color: var(--text-muted);">Need at least 2 readings for a chart</p>
 	</div>
