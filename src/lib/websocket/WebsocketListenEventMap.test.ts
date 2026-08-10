@@ -284,7 +284,7 @@ describe('WebsocketListenEventMap - Scripts', () => {
     it('SCRIPT_SAVED_EVENT adds script', () => {
         const handler = WebsocketListenEventMap[WebsocketListenEventEnum.SCRIPT_SAVED_EVENT];
 
-        handler({ id: 3, title: 'New Script', code: '', schedule: null, status: 0, created_at: '', updated_at: null });
+        handler({ script: { id: 3, title: 'New Script', code: '', schedule: null, status: 0, created_at: '', updated_at: null } });
 
         expect(get(scripts)[3].title).toBe('New Script');
     });
@@ -295,7 +295,7 @@ describe('WebsocketListenEventMap - Scripts', () => {
         });
 
         const handler = WebsocketListenEventMap[WebsocketListenEventEnum.SCRIPT_DELETED_EVENT];
-        handler({ id: 1, title: 'S1', code: '', schedule: null, status: 0, created_at: '', updated_at: null });
+        handler({ script: { id: 1, title: 'S1', code: '', schedule: null, status: 0, created_at: '', updated_at: null } });
 
         expect(get(scripts)[1]).toBeUndefined();
     });

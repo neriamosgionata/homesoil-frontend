@@ -142,7 +142,7 @@ export class Websocket {
   }
 
   removeScript(script_id: number) {
-    this.emitEvent(WebsocketEmitEventEnum.REMOVE_SCRIPT_EVENT, { id: script_id });
+    this.emitEvent(WebsocketEmitEventEnum.REMOVE_SCRIPT_EVENT, script_id);
   }
 
   modifyScript(script: Script) {

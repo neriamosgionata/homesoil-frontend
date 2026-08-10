@@ -275,14 +275,14 @@ describe('Websocket', () => {
     });
 
     describe('removeScript', () => {
-        it('calls emitEvent with REMOVE_SCRIPT_EVENT and script id', () => {
+        it('calls emitEvent with REMOVE_SCRIPT_EVENT and raw script id', () => {
             const scriptId = 40;
 
             websocket.removeScript(scriptId);
 
             expect(mockSocket.emit).toHaveBeenCalledWith(
                 WebsocketEmitEventEnum.REMOVE_SCRIPT_EVENT,
-                JSON.stringify({ id: scriptId })
+                scriptId
             );
         });
     });

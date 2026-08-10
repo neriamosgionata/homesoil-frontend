@@ -283,42 +283,49 @@ const WebsocketListenEventMap: { [p: string]: (...args: any[]) => void } = {
     }, {} as { [p: string]: Script }));
   },
 
-  [WebsocketListenEventEnum.SCRIPT_SAVED_EVENT]: (script: Script) => {
+  [WebsocketListenEventEnum.SCRIPT_SAVED_EVENT]: ({ script }: { script: Script }) => {
     scripts.update(scripts => {
       scripts[script.id] = script;
       return { ...scripts };
     });
   },
 
-  [WebsocketListenEventEnum.SCRIPT_DELETED_EVENT]: (script: Script) => {
+  [WebsocketListenEventEnum.SCRIPT_DELETED_EVENT]: ({ script }: { script: Script }) => {
+    if (!script || script.id === undefined) return;
     scripts.update(scripts => {
       delete scripts[script.id];
       return { ...scripts };
     });
   },
 
-  [WebsocketListenEventEnum.SCRIPT_MODIFIED_EVENT]: (script: Script) => {
+  [WebsocketListenEventEnum.SCRIPT_MODIFIED_EVENT]: ({ script }: { script: Script }) => {
     scripts.update(scripts => {
       scripts[script.id] = script;
       return { ...scripts };
     });
   },
 
-  [WebsocketListenEventEnum.SCRIPT_STATUS_CHANGE_EVENT]: (script: Script) => {
+  [WebsocketListenEventEnum.SCRIPT_STATUS_CHANGE_EVENT]: ({ script_id, status }: {
+    script_id: number,
+    status: number
+  }) => {
+    scripts.update(scripts => {
+      const script = scripts[script_id];
+      if (script) {
+        scripts[script_id] = { ...script, status };
+      }
+      return { ...scripts };
+    });
+  },
+
+  [WebsocketListenEventEnum.SCRIPT_SCHEDULE_ADDED_EVENT]: ({ script }: { script: Script }) => {
     scripts.update(scripts => {
       scripts[script.id] = script;
       return { ...scripts };
     });
   },
 
-  [WebsocketListenEventEnum.SCRIPT_SCHEDULE_ADDED_EVENT]: (script: Script) => {
-    scripts.update(scripts => {
-      scripts[script.id] = script;
-      return { ...scripts };
-    });
-  },
-
-  [WebsocketListenEventEnum.SCRIPT_SCHEDULE_REMOVED_EVENT]: (script: Script) => {
+  [WebsocketListenEventEnum.SCRIPT_SCHEDULE_REMOVED_EVENT]: ({ script }: { script: Script }) => {
     scripts.update(scripts => {
       scripts[script.id] = script;
       return { ...scripts };

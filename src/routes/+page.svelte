@@ -33,7 +33,7 @@
 				placeholder="Pairing PIN"
 				class="block w-full text-sm py-2.5 px-3 rounded-lg border focus:outline-none focus:ring-2 mb-5 text-center tracking-widest"
 				style="background-color: var(--bg-primary); border-color: var(--border-subtle); color: var(--text-primary);"
-				maxlength="6"
+				maxlength="8"
 				bind:value={pin}
 			/>
 		{/if}
